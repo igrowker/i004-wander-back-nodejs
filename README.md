@@ -15,3 +15,10 @@ npm run dev
 ```
 
 Remember to create a `.env` file with your environement variables.
+
+## .env variables
+
+PORT=5005
+ORIGIN=
+JAVA_BACKEND_URL=
+TOKEN_SECRET=

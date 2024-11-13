@@ -1,15 +1,14 @@
-import express, { Express, Request, Response } from "express";
-import dotenv from "dotenv";
+import express, { Express } from 'express'
 
-dotenv.config();
+const app: Express = express()
 
-const app: Express = express();
-const port = process.env.PORT || 3000;
+import config from './config/index'
+config(app)
 
-app.get("/", (req: Request, res: Response) => {
-    res.send("Express + TypeScript Server");
-});
+import routes from './routes/index'
+app.use('/api', routes)
 
-app.listen(port, () => {
-    console.log(`[server]: Server is running at http://localhost:${port}`);
-});
+import errorHandler from './errors/index'
+errorHandler(app)
+
+export default app
