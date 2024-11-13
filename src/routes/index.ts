@@ -11,6 +11,6 @@ const router: Router = express.Router()
 // example:
 router.use("/auth", authRoutes)
 */
-router.use("/", exampleRoutes)
+router.use("/example", exampleRoutes)
 
 export default router
