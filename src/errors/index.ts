@@ -2,7 +2,7 @@ import { Request, Response, NextFunction, Express } from 'express'
 
 export default (app: Express): void => {
     app.use((req: Request, res: Response, next: NextFunction) => {
-            res.status(404).json({ message: "This route does not exist" })
+        res.status(404).json({ message: "This route does not exist" })
     })
 
     app.use((err: any, req: Request, res: Response, next: NextFunction) => {
