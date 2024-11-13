@@ -1,0 +1,36 @@
+/**
+ * @swagger
+ * /{endpoint}:
+ *   {method}: # replace with get, post, put, delete, etc.
+ *     summary: {Brief description of what this endpoint does}
+ *     tags: [{TagName}]
+ *     requestBody:
+ *       required: true # or false, depending on the endpoint
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               {propertyName}:
+ *                 type: {propertyType} # e.g., string, integer, boolean
+ *                 example: {exampleValue} # Example: "sample text"
+ *     responses:
+ *       200:
+ *         description: {Success response description}
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 {responseProperty}:
+ *                   type: {responsePropertyType} # e.g., string, integer
+ *                   example: {responseExampleValue} # Example: "success"
+ *       400:
+ *         description: Bad Request - {Optional description}
+ *       401:
+ *         description: Unauthorized - {Optional description}
+ *       404:
+ *         description: Not Found - {Optional description}
+ *       500:
+ *         description: Internal Server Error - {Optional description}
+ */
