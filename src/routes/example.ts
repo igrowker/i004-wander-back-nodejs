@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-const router: Router = express.Router()
+const router: Router = express.Router();
 
 /**
  *  @swagger
