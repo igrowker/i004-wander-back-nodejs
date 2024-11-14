@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Wander NodeAPI",
+    "title": "Express TypeScript API",
     "version": "1.0.0",
     "description": "API documentation using Swagger"
   },
@@ -40,11 +40,11 @@
         }
       }
     },
-    "/login": {
+    "/auth/login": {
       "post": {
-        "summary": "User login with email",
+        "summary": "Authenticate user and retrieve JWT token",
         "tags": [
-          "User"
+          "UserAuth"
         ],
         "requestBody": {
           "required": true,
@@ -53,11 +53,6 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "id": {
-                    "type": "string",
-                    "format": "email",
-                    "example": "12093sjiad0109dsao"
-                  },
                   "email": {
                     "type": "string",
                     "example": "sample@mail.com"
@@ -80,9 +75,20 @@
                 "schema": {
                   "type": "object",
                   "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Success"
+                    },
                     "token": {
                       "type": "string",
                       "example": "token-string"
+                    },
+                    "user": {
+                      "type": "object",
+                      "example": {
+                        "username": "Pedrito",
+                        "email": "pedret@gmail.com"
+                      }
                     }
                   }
                 }
