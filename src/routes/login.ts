@@ -9,7 +9,7 @@ const SECRET_KEY = 'your_secret_key';
  * /login:
  *   post:
  *     summary: User login with email
- *     tags: [{User}]
+ *     tags: [User]
  *     requestBody:
  *       required: true
  *       content:

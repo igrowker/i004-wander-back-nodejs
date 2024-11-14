@@ -6,7 +6,7 @@ const router: Router = express.Router();
  *  /api/hello:
  *   get:
  *     summary: Returns a hello message
- *     tags: [{Example}]
+ *     tags: [Example]
  *     responses:
  *       200:
  *         description: Success

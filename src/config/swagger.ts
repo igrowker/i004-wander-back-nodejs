@@ -1,4 +1,5 @@
 import swaggerJSDoc from 'swagger-jsdoc';
+import fs from 'fs';
 
 const options = {
     definition: {
@@ -19,4 +20,7 @@ const options = {
     basePath: '/api'
 }
 
-export const swaggerSpecs = swaggerJSDoc(options)
+export const swaggerSpecs = swaggerJSDoc(options);
+
+// Export swagger specs to file
+fs.writeFileSync('swagger.json', JSON.stringify(swaggerSpecs, null, 2));
