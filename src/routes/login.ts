@@ -20,6 +20,7 @@ const SECRET_KEY = 'your_secret_key';
  *             properties:
  *               email:
  *                 type: string
+ *                 format: email
  *                 example: "sample@mail.com"
  *               password:
  *                 type: string
@@ -38,10 +39,7 @@ const SECRET_KEY = 'your_secret_key';
  *                   example: "Success"
  *                 token:
  *                   type: string
- *                   example: "token-string"
- *                 user:
- *                   type: object
- *                   example: {username: "Pedrito", email: "pedret@gmail.com"}
+ *                   example: "userInfo-token"
  *       400:
  *         description: Bad Request || Invalid request parameters
  *       401:
@@ -61,7 +59,7 @@ router.post("/auth/login", async (req, res) => {
         return res.status(404).json({message: "Email and password are required."})
     }
 
-    //Maybe add email format validation
+    //Maybe add email format validation (regex)
 
     try {
         //Send request to the backend to retrieve the jwt
