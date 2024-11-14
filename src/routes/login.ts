@@ -70,13 +70,12 @@ router.post("/auth/login", async (req, res) => {
             password
         });
         //If successful, store the response
-        const { token, user } = response.data
+        const { token } = response.data
 
         //Send the token and and user details
         res.json({
             message: "Log in successful",
-            token,
-            user
+            token
         })
     } catch (error: any) {
         console.log("Error logging in.", error);
