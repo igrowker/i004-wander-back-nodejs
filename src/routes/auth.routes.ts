@@ -7,4 +7,4 @@ router.post('/signup', signup)
 router.post('/login', login)
 router.get('/verify', isAuthenticated, verify)
 
-export default router
+export default router;

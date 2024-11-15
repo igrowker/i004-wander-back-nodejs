@@ -1,6 +1,8 @@
 import { Response, NextFunction, Request } from 'express'
 import axios from 'axios';
 
+const JAVA_BACKEND_URL = process.env.JAVA_BACKEND_URL;
+
 interface CustomRequest extends Request {
     payload?: any; // Adjust the type as necessary
 }
@@ -17,10 +19,9 @@ const signup = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 const login = async (req: Request, res: Response, next: NextFunction) => {
-    
+
     //Charlie
 
-    const JAVA_BACKEND_URL = process.env.JAVA_BACKEND_URL;
     const { email, password } = req.body;
 
     if (!email || !password) {
