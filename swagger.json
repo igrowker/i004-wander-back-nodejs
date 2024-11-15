@@ -55,6 +55,7 @@
                 "properties": {
                   "email": {
                     "type": "string",
+                    "format": "email",
                     "example": "sample@mail.com"
                   },
                   "password": {
@@ -81,14 +82,7 @@
                     },
                     "token": {
                       "type": "string",
-                      "example": "token-string"
-                    },
-                    "user": {
-                      "type": "object",
-                      "example": {
-                        "username": "Pedrito",
-                        "email": "pedret@gmail.com"
-                      }
+                      "example": "userInfo-token"
                     }
                   }
                 }
