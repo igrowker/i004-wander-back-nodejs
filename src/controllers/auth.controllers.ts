@@ -14,6 +14,7 @@ const signup = async (req: Request, res: Response, next: NextFunction) => {
     try {
         // connection with Java DB
         res.sendStatus(201)
+
     } catch (err) {
     }
 }
@@ -62,6 +63,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
 
 
 const verify = (req: CustomRequest, res: Response, next: NextFunction) => {
+
 
     if (req.authError && req.authError.name === 'Unauthorized') {
         return res.status(401).json({ message: 'JWT expired' })
