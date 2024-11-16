@@ -1,12 +1,12 @@
 import express, { Router } from 'express';
-const router: Router = express.Router()
+const router: Router = express.Router();
 
 /**
  *  @swagger
  *  /api/hello:
  *   get:
  *     summary: Returns a hello message
- *     tags: [{Example}]
+ *     tags: [Example]
  *     responses:
  *       200:
  *         description: Success
