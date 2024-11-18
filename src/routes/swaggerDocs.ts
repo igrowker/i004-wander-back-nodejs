@@ -84,20 +84,19 @@
  */
 
 // LOGOUT USER
-
 /**
  * @swagger
- * /logout:
+ * /auth/logout:
  *   post:
- *     summary: Cierra la sesión del usuario
- *     tags: [Auth]
+ *     summary: Logs current user out invalidating existing token
+ *     tags: [UserAuth]
  *     security:
  *       - bearerAuth: []
  *     requestBody:
  *       required: false
  *     responses:
  *       200:
- *         description: Sesión cerrada exitosamente
+ *         description: User logged out successfully
  *         content:
  *           application/json:
  *             schema:
@@ -105,9 +104,15 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Sesión cerrada exitosamente
+ *                   example: User logged out successfully
+ *       400:
+ *         description: Bad Request || Invalid request parameters
+ *       401:
+ *         description: Unauthorized || Invalid credentials
+ *       404:
+ *         description: Not Found
  *       500:
- *         description: Error interno del servidor
+ *         description: Internal Server Error
  *         content:
  *           application/json:
  *             schema:
