@@ -15,7 +15,11 @@ const recoverPassword = async (req: Request, res: Response, next: NextFunction) 
         return res.status(404).json({message: "Email and password are required."})
     }
 
-    //Maybe add email format validation (regex)
+    //Add email format validation (regex)
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(email)) {
+        return res.status(400).json({ message: "Invalid email format." });
+    }
 
     try {
         //Send request to the backend to create a recovery code sent to email
