@@ -20,8 +20,6 @@ const signup = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const login = async (req: Request, res: Response, next: NextFunction) => {
-    
-    //Charlie
 
   const { email, password } = req.body;
 
@@ -55,7 +53,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
         });
 
     } catch (error: any) {
-        console.log("Error logging in.", error);
+        console.error("Error logging in.", error);
 
     if (error.response) {
       switch (error.response.status) {
@@ -70,19 +68,10 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
-const verify = (req: CustomRequest, res: Response, next: NextFunction) => {
-
-    if (req.authError && req.authError.name === "Unauthorized") {
-        return res.status(401).json({ message: "JWT expired" });
-    }
-
-    res.status(200).json(req.payload);
-};
-
 const logout = async (req: Request, res: Response) => {
 
     const token = req.headers.authorization?.split(" ")[1];
-    
+
     if (!token) {
         return res.status(401).json({ message: "No token provided" });
     }
@@ -101,4 +90,102 @@ const logout = async (req: Request, res: Response) => {
     }
 };
 
-export { signup, login, verify, logout };
+const getProfile = async (req: Request, res: Response, next: NextFunction) => {
+
+    const token = req.headers.authorization?.split("")[1];
+
+    if (!token) {
+        return res.status(401).json({ message: "No token provided" });
+    }
+
+    try {
+        // Send a request to the backend to retrieve the user's profile
+        const response = await axios.get(`${JAVA_BACKEND_URL}/users/profile`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        // Extract the user profile data from the response
+        const profile = response.data
+        res.status(200).json(profile)
+
+    } catch (error: any) {
+        console.error("Error retrieving profile:", error);
+
+        if (error.response) {
+            switch (error.response.status) {
+                case 401:
+                    return res.status(401).json({ message: "Unauthorized access" });
+                case 404:
+                    return res.status(404).json({ message: "Profile not found" });
+                default:
+                    return res.status(500).json({ message: "Internal server error" });
+            }
+        }
+
+        res.status(500).json({ message: "Internal server error" });
+    }
+
+}
+
+const updateProfile = async (req: Request, res: Response, next: NextFunction) => {
+
+    const token = req.headers.authorization?.split("")[1];
+
+    if (!token) {
+        return res.status(401).json({ message: "No token provided" });
+    }
+
+    const newData = req.body
+
+    if (Object.keys(newData).length === 0) {
+        return res.status(400).json({ message: "No data provided to update" });
+    }
+
+    try {
+        // Send the updated data to the backend
+        const response = await axios.put(`${JAVA_BACKEND_URL}/users/profile`, newData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        // If successful, return the updated profile data
+        const updatedProfile = response.data;
+
+        res.status(200).json({
+            message: "Profile updated successfully",
+            updatedProfile,
+        });
+
+    } catch (error: any) {
+        console.error("Error updating profile:", error);
+
+        if (error.response) {
+            switch (error.response.status) {
+                case 400:
+                    return res.status(400).json({ message: "Invalid data provided" });
+                case 401:
+                    return res.status(401).json({ message: "Unauthorized access" });
+                case 404:
+                    return res.status(404).json({ message: "User not found" });
+                default:
+                    return res.status(500).json({ message: "Internal server error" });
+            }
+        }
+
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+                       
+const verify = (req: CustomRequest, res: Response, next: NextFunction) => {
+
+    if (req.authError && req.authError.name === "Unauthorized") {
+        return res.status(401).json({ message: "JWT expired" });
+    }
+
+    res.status(200).json(req.payload);
+};
+
+export { signup, login, verify, logout, getProfile, updateProfile };
