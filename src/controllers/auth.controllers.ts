@@ -68,9 +68,12 @@ const verify = (req: CustomRequest, res: Response, next: NextFunction) => {
 };
 
 const logout = async (req: Request, res: Response) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) {
+    return res.status(401).json({ message: "No token provided" });
+  }
   try {
-    const token = req.headers.authorization?.split(" ")[1];
-    await axios.post(`${JAVA_BACKEND_URL}/invalidate-token`, null, {
+    await axios.post(`${JAVA_BACKEND_URL}/users/logout`, null, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
