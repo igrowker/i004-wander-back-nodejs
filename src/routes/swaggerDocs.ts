@@ -117,3 +117,99 @@
  *                   type: string
  *                   example: Hubo un problema al cerrar la sesión
  */
+
+
+// USER REGISTRATION ENDPOINT
+/**
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     summary: Registra un nuevo usuario
+ *     description: Valida los datos del usuario, los envía al backend principal y devuelve la respuesta al frontend.
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *               - password
+ *               - role
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: John Doe
+ *                 description: Nombre completo del usuario.
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: john.doe@example.com
+ *                 description: Correo electrónico del usuario.
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 example: Passw0rd@
+ *                 description: Contraseña del usuario (8-12 caracteres, al menos una mayúscula, una minúscula, un número y un símbolo `@#!`).
+ *               role:
+ *                 type: string
+ *                 enum:
+ *                   - tourist
+ *                   - provider
+ *                 example: tourist
+ *                 description: Rol del usuario.
+ *               preferences:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: ["adventure", "beach"]
+ *                 description: Preferencias personales del usuario.
+ *               location:
+ *                 type: string
+ *                 example: New York, USA
+ *                 description: Ubicación del usuario.
+ *     responses:
+ *       200:
+ *         description: Registro exitoso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User registered successfully.
+ *                 userId:
+ *                   type: string
+ *                   example: 64afc392d9e3b0a9e8c92f11
+ *       400:
+ *         description: Errores de validación
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   example:
+ *                     - "El nombre es obligatorio"
+ *                     - "Correo electrónico inválido"
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error.
+ *                 details:
+ *                   type: string
+ *                   example: Error inesperado.
+ */
