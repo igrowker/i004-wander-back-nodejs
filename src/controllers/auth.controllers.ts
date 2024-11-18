@@ -67,4 +67,18 @@ const verify = (req: CustomRequest, res: Response, next: NextFunction) => {
   res.status(200).json(req.payload);
 };
 
-export { signup, login, verify };
+const logout = async (req: Request, res: Response) => {
+  try {
+    const token = req.headers.authorization?.split(" ")[1];
+    await axios.post(`${JAVA_BACKEND_URL}/invalidate-token`, null, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    res.status(200).json({ message: "Sesión cerrada exitosamente" });
+  } catch (error) {
+    console.error("Error durante el logout:", error);
+    res.status(500).json({ error: "Hubo un problema al cerrar la sesión" });
+  }
+};
+export { signup, login, verify, logout };

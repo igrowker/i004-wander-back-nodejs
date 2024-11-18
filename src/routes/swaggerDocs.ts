@@ -83,3 +83,37 @@
  *         description: Internal Server Error
  */
 
+// LOGOUT USER
+
+/**
+ * @swagger
+ * /logout:
+ *   post:
+ *     summary: Cierra la sesión del usuario
+ *     tags: [Auth]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: false
+ *     responses:
+ *       200:
+ *         description: Sesión cerrada exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Sesión cerrada exitosamente
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: Hubo un problema al cerrar la sesión
+ */
