@@ -8,14 +8,6 @@ interface CustomRequest extends Request {
   payload?: any; // Adjust the type as necessary
 }
 
-const signup = async (req: Request, res: Response, next: NextFunction) => {
-  const userData = req.body;
-
-  try {
-    // connection with Java DB
-    res.sendStatus(201);
-  } catch (err) {}
-};
 
 const login = async (req: Request, res: Response, next: NextFunction) => {
   //Charlie
@@ -147,4 +139,4 @@ const register = async (req: Request, res: Response) => {
   }
 };
 
-export { signup, login, verify, logout, register };
+export { login, verify, logout, register };
