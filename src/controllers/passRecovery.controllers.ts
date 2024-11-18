@@ -1,0 +1,46 @@
+import { Response, NextFunction, Request } from 'express'
+import axios from 'axios';
+
+const JAVA_BACKEND_URL = process.env.JAVA_BACKEND_URL;
+
+interface CustomRequest extends Request {
+    payload?: any; // Adjust the type as necessary
+}
+
+const recoverPassword = async (req: Request, res: Response, next: NextFunction) => {
+
+    const { email } = req.body;
+
+    if (!email) {
+        return res.status(404).json({message: "Email and password are required."})
+    }
+
+    //Maybe add email format validation (regex)
+
+    try {
+        //Send request to the backend to create a recovery code sent to email
+        const response = await axios.post(`${JAVA_BACKEND_URL}/users/{recover_password}`, {
+            email,
+        });
+
+        res.json({
+            message: "Password recovery request sent successfully.",
+            result: response.data
+        })
+    } catch (error: any) {
+        console.log("Error requesting password recovery.", error)
+
+        if (error.response) {
+            switch (error.response.status) {
+                case 404:
+                    return res.status(404).json({ message: "User not found" });
+                case 401:
+                    return res.status(401).json({ message: "Invalid credentials" });
+                default:
+                    return res.status(500).json({ message: "Internal server error." });
+            }
+        }
+    }
+};
+
+export { recoverPassword }
