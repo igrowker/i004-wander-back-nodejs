@@ -56,4 +56,25 @@ const getExperiences = async (req: Request, res: Response) => {
   }
 
 
-export { getExperiences };
+const getExperienceById = async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const url = `${JAVA_BACKEND_URL}/experiences/${id}`;
+    
+    try {
+      const response = await axios.get(url);
+      const experience = response.data;
+
+      if (response.status === 404) {
+        res.status(404).json({ message: 'Experience not found' });
+      } else {
+        res.status(500).json({ message: 'Internal server error' });
+      }
+  
+      res.json(experience);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: (error as Error).message });
+    }
+  }
+
+export { getExperiences, getExperienceById };
