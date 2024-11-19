@@ -213,3 +213,38 @@
  *                   type: string
  *                   example: Error inesperado.
  */
+
+// GET EXPERIENCES EXTERNAL ENDPOINT
+/**
+ * @swagger
+ * /api/experiences:
+ *   get:
+ *     summary: Retrieve experiences with optional filtering
+ *     tags: [Experiences]
+ *     parameters:
+ *       - in: query
+ *         name: Any filter parameter
+ *         schema:
+ *           type: object
+ *         description: Dynamic query parameters for filtering experiences
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved experiences
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 description: Experience object
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Error al obtener experiencias
+ */
