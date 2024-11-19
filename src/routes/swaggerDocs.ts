@@ -217,7 +217,7 @@
 // GET EXPERIENCES EXTERNAL ENDPOINT
 /**
  * @swagger
- * /api/experiences:
+ * /api/experiences/get-all:
  *   get:
  *     summary: Retrieve experiences with optional filtering
  *     tags: [Experiences]

@@ -3,7 +3,7 @@ const router = express.Router();
 import { getExperiences } from "../controllers/experiences.controllers";
 
 
-router.get('/experiences', getExperiences);
+router.get('/get-all', getExperiences);
 
 
 export default router;
