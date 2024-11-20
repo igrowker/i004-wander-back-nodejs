@@ -1,7 +1,7 @@
 // LOGIN ENDPOINT
 /**
  * @swagger
- * /auth/login:
+ * /api/auth/login:
  *   post:
  *     summary: Authenticate user and retrieve JWT token
  *     tags: [UserAuth]
@@ -47,7 +47,7 @@
 //PASSWORD RECOVERY ENDPOINT
 /**
  * @swagger
- * /recoverPassword:
+ * /api/recoverPassword:
  *   post:
  *     summary: Create a token to request a password recovery.
  *     tags: [Password Recovery]
@@ -86,7 +86,7 @@
 // LOGOUT USER
 /**
  * @swagger
- * /auth/logout:
+ * /api/auth/logout:
  *   post:
  *     summary: Logs out user invalidating token
  *     tags: [UserAuth]
@@ -124,7 +124,7 @@
 // GET USER PROFILE ENDPOINT
 /**
  * @swagger
- * /auth/profile:
+ * /api/auth/profile:
  *   get:
  *     summary: Retrieve the user's profile
  *     tags: [UserProfile]
@@ -169,7 +169,7 @@
 // UPDATE USER PROFILE ENDPOINT
 /**
  * @swagger
- * /users/profile:
+ * /api/users/profile:
  *   put:
  *     summary: Update the user's profile
  *     tags: [UserProfile]
@@ -247,7 +247,7 @@
 // USER REGISTRATION ENDPOINT
 /**
  * @swagger
- * /auth/register:
+ * /api/auth/register:
  *   post:
  *     summary: Registra un nuevo usuario
  *     description: Valida los datos del usuario, los envía al backend principal y devuelve la respuesta al frontend.
