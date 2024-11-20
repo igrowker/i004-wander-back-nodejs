@@ -16,6 +16,9 @@
         "exec": "ts-node -r tsconfig-paths/register src/server.ts"
     },
     "dependencies": {
+        "@aws-sdk/client-s3": "^3.693.0",
+        "@aws-sdk/credential-provider-env": "^3.693.0",
+        "@aws-sdk/s3-request-presigner": "^3.693.0",
         "axios": "^1.7.7",
         "cors": "^2.8.5",
         "dotenv": "^16.4.5",
