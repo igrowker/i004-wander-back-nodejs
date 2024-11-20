@@ -78,7 +78,7 @@
  *       401:
  *         description: Unauthorized || Invalid credentials
  *       404:
- *         description: Not Found
+ *         description: Email Not Found
  *       500:
  *         description: Internal Server Error
  */
@@ -92,6 +92,10 @@
  *     tags: [UserAuth]
  *     security:
  *       - bearerAuth: []
+ *     description: |
+ *       This endpoint requires a Bearer token for authentication.
+ *       Include the token in the Authorization header as follows:
+ *       Authorization: Bearer <your_token_here>
  *     requestBody:
  *       required: false
  *     responses:
@@ -128,6 +132,10 @@
  *     tags: [UserProfile]
  *     security:
  *       - bearerAuth: []
+ *     description: |
+ *       This endpoint requires a Bearer token for authentication.
+ *       Include the token in the Authorization header as follows:
+ *       Authorization: Bearer <your_token_here>
  *     responses:
  *       200:
  *         description: Profile retrieved successfully
@@ -169,6 +177,10 @@
  *     tags: [UserProfile]
  *     security:
  *       - bearerAuth: []
+ *     description: |
+ *       This endpoint requires a Bearer token for authentication.
+ *       Include the token in the Authorization header as follows:
+ *       Authorization: Bearer <your_token_here>
  *     requestBody:
  *       required: true
  *       content:
@@ -190,7 +202,7 @@
  *                 type: array
  *                 items:
  *                   type: string
- *                 example: ["things"]
+ *                 description: Optional user preferences (e.g., ["adventure", "beach"]).
  *     responses:
  *       200:
  *         description: Profile updated successfully
@@ -204,7 +216,26 @@
  *                   example: "Profile updated successfully"
  *                 updatedProfile:
  *                   type: object
- *                   example: {updated user profile data}
+ *                   properties:
+ *                     email:
+ *                       type: string
+ *                       example: "newemail@mail.com"
+ *                     name:
+ *                       type: string
+ *                       example: "New Name"
+ *                     location:
+ *                       type: string
+ *                       example: "New York, USA"
+ *                     preferences:
+ *                       type: array
+ *                       items:
+ *                         type: string
+ *                       example: ["adventure", "beach"]
+ *                   example:
+ *                     email: "newemail@mail.com"
+ *                     name: "New Name"
+ *                     location: "New York, USA"
+ *                     preferences: ["adventure", "beach"]
  *       400:
  *         description: Bad Request || Invalid data provided
  *       401:
@@ -213,4 +244,145 @@
  *         description: Not Found || User not found
  *       500:
  *         description: Internal Server Error
+
+
+// USER REGISTRATION ENDPOINT
+/**
+ * @swagger
+ * /auth/register:
+ *   post:
+ *     summary: Registra un nuevo usuario
+ *     description: Valida los datos del usuario, los envía al backend principal y devuelve la respuesta al frontend.
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name
+ *               - email
+ *               - password
+ *               - role
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: John Doe
+ *                 description: Nombre completo del usuario.
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: john.doe@sample.com
+ *                 description: Correo electrónico del usuario.
+ *               password:
+ *                 type: string
+ *                 format: password
+ *                 example: Passw0rd@
+ *                 description: Contraseña del usuario (8-12 caracteres, al menos una mayúscula, una minúscula, un número y un símbolo `@#!`).
+ *               role:
+ *                 type: string
+ *                 enum:
+ *                   - tourist
+ *                   - provider
+ *                 example: tourist
+ *                 description: Rol del usuario.
+ *               preferences:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: ["adventure", "beach"]
+ *                 description: Preferencias personales del usuario.
+ *               location:
+ *                 type: string
+ *                 example: New York, USA
+ *                 description: Ubicación del usuario.
+ *     responses:
+ *       200:
+ *         description: Registro exitoso
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: User registered successfully.
+ *                 userId:
+ *                   type: string
+ *                   example: 64afc392d9e3b0a9e8c92f11
+ *       400:
+ *         description: Errores de validación
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   example:
+ *                     - "El nombre es obligatorio"
+ *                     - "Correo electrónico inválido"
+ *                     - "La contraseña debe tener entre 8 y 12 caracteres"
+ *       500:
+ *         description: Error interno del servidor
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error.
+ *                 details:
+ *                   type: string
+ *                   example: Error inesperado.
+ */
+
+// GET EXPERIENCES EXTERNAL ENDPOINT
+/**
+ * @swagger
+ * /api/experiences/get-all:
+ *   get:
+ *     summary: Retrieve experiences with optional filtering
+ *     tags: [Experiences]
+ *     parameters:
+ *       - in: query
+ *         name: Any filter parameter
+ *         schema:
+ *           type: object
+ *         description: Dynamic query parameters for filtering experiences
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved experiences
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     example: "experience123"
+ *                   title:
+ *                     type: string
+ *                     example: "Skydiving Adventure"
+ *                   location:
+ *                     type: string
+ *                     example: "California"
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Error al obtener experiencias
  */
