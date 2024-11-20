@@ -96,8 +96,6 @@
  *       This endpoint requires a Bearer token for authentication.
  *       Include the token in the Authorization header as follows:
  *       Authorization: Bearer <your_token_here>
- *     requestBody:
- *       required: false
  *     responses:
  *       200:
  *         description: User logged out successfully
@@ -244,7 +242,7 @@
  *         description: Not Found || User not found
  *       500:
  *         description: Internal Server Error
-
+ */
 
 // USER REGISTRATION ENDPOINT
 /**
@@ -253,8 +251,7 @@
  *   post:
  *     summary: Registra un nuevo usuario
  *     description: Valida los datos del usuario, los envía al backend principal y devuelve la respuesta al frontend.
- *     tags:
- *       - Auth
+ *     tags: [Register]
  *     requestBody:
  *       required: true
  *       content:
@@ -266,7 +263,6 @@
  *               - email
  *               - password
  *               - role
- *             type: object
  *             properties:
  *               name:
  *                 type: string
