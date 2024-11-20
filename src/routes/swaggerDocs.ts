@@ -214,7 +214,7 @@
  *                   example: Error inesperado.
  */
 
-// GET EXPERIENCES EXTERNAL ENDPOINT
+// GET EXPERIENCES ENDPOINT
 /**
  * @swagger
  * /api/experiences/get-all:
@@ -247,4 +247,91 @@
  *                 message:
  *                   type: string
  *                   example: Error al obtener experiencias
+ */
+
+// GET EXPERIENCES BY ID ENDPOINT
+/**
+ * @swagger
+ * /api/experiences/{id}:
+ *   get:
+ *     summary: Get an experience by ID
+ *     description: Retrieve details of a specific experience by its unique ID.
+ *     tags:
+ *       - Experiences
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: The unique ID of the experience to retrieve.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Experience details retrieved successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                   description: The unique identifier of the experience.
+ *                 title:
+ *                   type: string
+ *                   description: The title of the experience.
+ *                 description:
+ *                   type: string
+ *                   description: A detailed description of the experience.
+ *                 location:
+ *                   type: string
+ *                   description: The location where the experience takes place.
+ *                 hostId:
+ *                   type: string
+ *                   description: The unique identifier of the host.
+ *                 price:
+ *                   type: number
+ *                   format: float
+ *                   description: The price of the experience.
+ *                 availabilityDates:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     format: date-time
+ *                   description: A list of available dates for the experience.
+ *                 tags:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   description: Tags associated with the experience.
+ *                 rating:
+ *                   type: number
+ *                   format: float
+ *                   description: The rating of the experience.
+ *                 capacity:
+ *                   type: number
+ *                   description: The maximum number of participants for the experience.
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                   description: The date when the experience was created.
+ *       404:
+ *         description: Experience not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Experience not found
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
  */
