@@ -78,26 +78,27 @@
  *       401:
  *         description: Unauthorized || Invalid credentials
  *       404:
- *         description: Not Found
+ *         description: Email Not Found
  *       500:
  *         description: Internal Server Error
  */
 
 // LOGOUT USER
-
 /**
  * @swagger
  * /logout:
  *   post:
- *     summary: Cierra la sesión del usuario
- *     tags: [Auth]
+ *     summary: Logs out user invalidating token
+ *     tags: [UserAuth]
  *     security:
  *       - bearerAuth: []
- *     requestBody:
- *       required: false
+ *     description: |
+ *       This endpoint requires a Bearer token for authentication.
+ *       Include the token in the Authorization header as follows:
+ *       Authorization: Bearer <your_token_here>
  *     responses:
  *       200:
- *         description: Sesión cerrada exitosamente
+ *         description: User logged out successfully
  *         content:
  *           application/json:
  *             schema:
@@ -105,9 +106,11 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Sesión cerrada exitosamente
+ *                   example: User logged out successfully
+ *       401:
+ *         description: Unauthorized || No valid token provided
  *       500:
- *         description: Error interno del servidor
+ *         description: Internal server error || There was a problem logging out
  *         content:
  *           application/json:
  *             schema:
@@ -115,9 +118,131 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: Hubo un problema al cerrar la sesión
+ *                   example: There was a problem logging out
  */
 
+// GET USER PROFILE ENDPOINT
+/**
+ * @swagger
+ * /auth/profile:
+ *   get:
+ *     summary: Retrieve the user's profile
+ *     tags: [UserProfile]
+ *     security:
+ *       - bearerAuth: []
+ *     description: |
+ *       This endpoint requires a Bearer token for authentication.
+ *       Include the token in the Authorization header as follows:
+ *       Authorization: Bearer <your_token_here>
+ *     responses:
+ *       200:
+ *         description: Profile retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Profile retrieved successfully"
+ *                 profile:
+ *                   type: object
+ *                   properties:
+ *                     name:
+ *                       type: string
+ *                       example: "Carlos"
+ *                     email:
+ *                       type: string
+ *                       format: email
+ *                       example: "cgarcia@sample.com"
+ *                     location:
+ *                       type: string
+ *                       example: "Spain"
+ *       401:
+ *         description: Unauthorized || No token provided
+ *       404:
+ *         description: Not Found || Profile not found
+ *       500:
+ *         description: Internal Server Error
+ */
+
+// UPDATE USER PROFILE ENDPOINT
+/**
+ * @swagger
+ * /users/profile:
+ *   put:
+ *     summary: Update the user's profile
+ *     tags: [UserProfile]
+ *     security:
+ *       - bearerAuth: []
+ *     description: |
+ *       This endpoint requires a Bearer token for authentication.
+ *       Include the token in the Authorization header as follows:
+ *       Authorization: Bearer <your_token_here>
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "pedrito@gmail.com"
+ *               name:
+ *                 type: string
+ *                 example: "Pedro"
+ *               location:
+ *                 type: string
+ *                 example: "Spain"
+ *               preferences:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: Optional user preferences (e.g., ["adventure", "beach"]).
+ *     responses:
+ *       200:
+ *         description: Profile updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Profile updated successfully"
+ *                 updatedProfile:
+ *                   type: object
+ *                   properties:
+ *                     email:
+ *                       type: string
+ *                       example: "newemail@mail.com"
+ *                     name:
+ *                       type: string
+ *                       example: "New Name"
+ *                     location:
+ *                       type: string
+ *                       example: "New York, USA"
+ *                     preferences:
+ *                       type: array
+ *                       items:
+ *                         type: string
+ *                       example: ["adventure", "beach"]
+ *                   example:
+ *                     email: "newemail@mail.com"
+ *                     name: "New Name"
+ *                     location: "New York, USA"
+ *                     preferences: ["adventure", "beach"]
+ *       400:
+ *         description: Bad Request || Invalid data provided
+ *       401:
+ *         description: Unauthorized || No token provided
+ *       404:
+ *         description: Not Found || User not found
+ *       500:
+ *         description: Internal Server Error
+ */
 
 // USER REGISTRATION ENDPOINT
 /**
@@ -126,8 +251,7 @@
  *   post:
  *     summary: Registra un nuevo usuario
  *     description: Valida los datos del usuario, los envía al backend principal y devuelve la respuesta al frontend.
- *     tags:
- *       - Auth
+ *     tags: [Register]
  *     requestBody:
  *       required: true
  *       content:
@@ -147,7 +271,7 @@
  *               email:
  *                 type: string
  *                 format: email
- *                 example: john.doe@example.com
+ *                 example: john.doe@sample.com
  *                 description: Correo electrónico del usuario.
  *               password:
  *                 type: string
@@ -199,6 +323,7 @@
  *                   example:
  *                     - "El nombre es obligatorio"
  *                     - "Correo electrónico inválido"
+ *                     - "La contraseña debe tener entre 8 y 12 caracteres"
  *       500:
  *         description: Error interno del servidor
  *         content:
@@ -236,7 +361,16 @@
  *               type: array
  *               items:
  *                 type: object
- *                 description: Experience object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     example: "experience123"
+ *                   title:
+ *                     type: string
+ *                     example: "Skydiving Adventure"
+ *                   location:
+ *                     type: string
+ *                     example: "California"
  *       500:
  *         description: Internal server error
  *         content:

@@ -9,5 +9,4 @@ router.use("/auth", authRoutes)
 router.use("/recoverPassword", recoverPassword)
 router.use("/experiences", experienceRoutes)
 
-
 export default router
