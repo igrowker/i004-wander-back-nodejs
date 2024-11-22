@@ -12,34 +12,6 @@
     }
   ],
   "paths": {
-    "/api/hello": {
-      "get": {
-        "summary": "Returns a hello message",
-        "tags": [
-          "Example"
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request - No message for you."
-          }
-        }
-      }
-    },
     "/api/auth/login": {
       "post": {
         "summary": "Authenticate user and retrieve JWT token",
@@ -348,15 +320,6 @@
                             "beach"
                           ]
                         }
-                      },
-                      "example": {
-                        "email": "newemail@mail.com",
-                        "name": "New Name",
-                        "location": "New York, USA",
-                        "preferences": [
-                          "adventure",
-                          "beach"
-                        ]
                       }
                     }
                   }
@@ -381,8 +344,8 @@
     },
     "/api/auth/register": {
       "post": {
-        "summary": "Registra un nuevo usuario",
-        "description": "Valida los datos del usuario, los envía al backend principal y devuelve la respuesta al frontend.",
+        "summary": "Register a new user",
+        "description": "Validates user data, sends it to the main backend, and returns the response to the frontend.",
         "tags": [
           "Register"
         ],
@@ -402,19 +365,19 @@
                   "name": {
                     "type": "string",
                     "example": "John Doe",
-                    "description": "Nombre completo del usuario."
+                    "description": "Full name of the user."
                   },
                   "email": {
                     "type": "string",
                     "format": "email",
                     "example": "john.doe@sample.com",
-                    "description": "Correo electrónico del usuario."
+                    "description": "User's email address."
                   },
                   "password": {
                     "type": "string",
                     "format": "password",
                     "example": "Passw0rd@",
-                    "description": "Contraseña del usuario (8-12 caracteres, al menos una mayúscula, una minúscula, un número y un símbolo `@#!`)."
+                    "description": "User's password (8-12 characters, at least one uppercase letter, one lowercase letter, one number, and one special character `@#!`)."
                   },
                   "role": {
                     "type": "string",
@@ -423,7 +386,7 @@
                       "provider"
                     ],
                     "example": "tourist",
-                    "description": "Rol del usuario."
+                    "description": "User's role."
                   },
                   "preferences": {
                     "type": "array",
@@ -434,12 +397,12 @@
                       "adventure",
                       "beach"
                     ],
-                    "description": "Preferencias personales del usuario."
+                    "description": "User's personal preferences."
                   },
                   "location": {
                     "type": "string",
                     "example": "New York, USA",
-                    "description": "Ubicación del usuario."
+                    "description": "User's location."
                   }
                 }
               }
@@ -448,7 +411,7 @@
         },
         "responses": {
           "200": {
-            "description": "Registro exitoso",
+            "description": "Registration successful",
             "content": {
               "application/json": {
                 "schema": {
@@ -468,7 +431,7 @@
             }
           },
           "400": {
-            "description": "Errores de validación",
+            "description": "Validation errors",
             "content": {
               "application/json": {
                 "schema": {
@@ -480,9 +443,9 @@
                         "type": "string"
                       },
                       "example": [
-                        "El nombre es obligatorio",
-                        "Correo electrónico inválido",
-                        "La contraseña debe tener entre 8 y 12 caracteres"
+                        "Name is required",
+                        "Invalid email address",
+                        "Password must be between 8 and 12 characters"
                       ]
                     }
                   }
@@ -491,7 +454,7 @@
             }
           },
           "500": {
-            "description": "Error interno del servidor",
+            "description": "Internal server error",
             "content": {
               "application/json": {
                 "schema": {
@@ -503,7 +466,7 @@
                     },
                     "details": {
                       "type": "string",
-                      "example": "Error inesperado."
+                      "example": "Unexpected error."
                     }
                   }
                 }
@@ -522,7 +485,7 @@
         "parameters": [
           {
             "in": "query",
-            "name": "Any filter parameter",
+            "name": "filter",
             "schema": {
               "type": "object"
             },
@@ -566,7 +529,7 @@
                   "properties": {
                     "message": {
                       "type": "string",
-                      "example": "Error al obtener experiencias"
+                      "example": "Error retrieving experiences"
                     }
                   }
                 }
