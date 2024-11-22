@@ -86,23 +86,21 @@ const uploadExperience = async (req: Request, res: Response) => {
     return res.status(401).json({ message: "No token provided" });
   }
 
-  const { title, description, location, price, availabilityDates, tags, rating, capacity } = req.body;
+  const { title, description, location, price, availabilityDates, tags, rating, capacity } = req.body || {};
 
+  // Validate required fields
   if (!title || !description || !location || !price || !availabilityDates || !tags || !rating || !capacity) {
     return res.status(400).json({ message: 'All fields are required. Please provide title, description, location, price, availabilityDates, tags, rating, and capacity.' });
   }
-
-  // Create validations for all necessary params
 
   try {
     const response = await axios.post(`${JAVA_BACKEND_URL}/experiences`, {
       title, description, location, price, availabilityDates, tags, rating, capacity
     });
 
-    // If successful send an OK message with the experience details
     const { experience } = response.data;
 
-    res.json({
+    return res.status(201).json({
       message: "Experience created successfully",
       experience
     });
@@ -133,7 +131,7 @@ const updateExperience = async (req: Request, res: Response) => {
     return res.status(401).json({ message: "No token provided" });
   }
 
-  const newData = req.body
+  const newData = req.body || {};
 
   if (Object.keys(newData).length === 0) {
     return res.status(400).json({ message: "No data provided to update" });
@@ -144,10 +142,10 @@ const updateExperience = async (req: Request, res: Response) => {
       headers: {
         Authorization: `Bearer ${token}`
       }
-    })
+    });
 
-    const updatedExperience = response.data
-    res.status(200).json({
+    const updatedExperience = response.data;
+    return res.status(200).json({
       message: "Experience updated successfully",
       updatedExperience
     });
