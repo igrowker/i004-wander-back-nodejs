@@ -40,7 +40,7 @@
         }
       }
     },
-    "/auth/login": {
+    "/api/auth/login": {
       "post": {
         "summary": "Authenticate user and retrieve JWT token",
         "tags": [
@@ -104,7 +104,7 @@
         }
       }
     },
-    "/recoverPassword": {
+    "/api/recoverPassword": {
       "post": {
         "summary": "Create a token to request a password recovery.",
         "tags": [
@@ -159,7 +159,7 @@
         }
       }
     },
-    "/auth/logout": {
+    "/api/auth/logout": {
       "post": {
         "summary": "Logs out user invalidating token",
         "tags": [
@@ -210,7 +210,7 @@
         }
       }
     },
-    "/auth/profile": {
+    "/api/auth/profile": {
       "get": {
         "summary": "Retrieve the user's profile",
         "tags": [
@@ -269,7 +269,7 @@
         }
       }
     },
-    "/users/profile": {
+    "/api/users/profile": {
       "put": {
         "summary": "Update the user's profile",
         "tags": [
@@ -381,7 +381,7 @@
         }
       }
     },
-    "/auth/register": {
+    "/api/auth/register": {
       "post": {
         "summary": "Registra un nuevo usuario",
         "description": "Valida los datos del usuario, los envía al backend principal y devuelve la respuesta al frontend.",
