@@ -807,3 +807,104 @@
  *                   type: string
  *                   example: "Unexpected error occurred while processing the request."
  */
+
+// UPLOAD REVIEW ENDPOINT
+/**
+ * @swagger
+ * /api/reviews:
+ *   post:
+ *     summary: Upload a new review
+ *     tags: [Reviews]
+ *     security:
+ *       - bearerAuth: []
+ *     description: |
+ *       This endpoint requires a Bearer token for authentication.
+ *       Include the token in the Authorization header as follows:
+ *       Authorization: Bearer <your_token_here>
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - experienceId
+ *               - rating
+ *               - comment
+ *               - date
+ *             properties:
+ *               experienceId:
+ *                 type: string
+ *                 example: "experience123"
+ *                 description: ID of the experience being reviewed.
+ *               rating:
+ *                 type: number
+ *                 format: float
+ *                 description: Rating given to the experience (0-5).
+ *               comment:
+ *                 type: string
+ *                 example: "It was an amazing experience!"
+ *                 description: User's comment about the experience.
+ *               date:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Date when the review was submitted.
+ *     responses:
+ *       200:
+ *         description: Review uploaded successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Review uploaded successfully."
+ *                 review:
+ *                   type: object
+ *                   properties:
+ *                     experienceId:
+ *                       type: string
+ *                       description: ID of the experience reviewed.
+ *                     rating:
+ *                       type: number
+ *                       format: float
+ *                       description: Rating given to the experience.
+ *                     comment:
+ *                       type: string
+ *                       description: User's comment about the experience.
+ *                     date:
+ *                       type: string
+ *                       format: date-time
+ *                       description: Date when the review was submitted.
+ *       400:
+ *         description: Bad Request || Invalid data provided (e.g., missing required fields).
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "All fields are required. Please provide experienceId, rating, comment and date."
+ *       401:
+ *         description: Unauthorized || No token provided.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "No token provided"
+ *       500:
+ *         description: Internal Server Error || An unexpected error occurred
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "An unexpected error occurred. Please try again later."
+ */
