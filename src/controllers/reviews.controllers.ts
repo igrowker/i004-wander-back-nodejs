@@ -18,20 +18,20 @@ const uploadReview = async (req: Request, res: Response) => {
     }
 
     try{
-        const response = await axios.post(`${JAVA_BACKEND_URL}/experiences`, {
+        const response = await axios.post(`${JAVA_BACKEND_URL}/reviews`, {
             experienceId, rating, comment, date
         });
 
         const { review } = response.data
 
-        res.json({
+        return res.json({
             message: "Review uploaded successfully.",
             review
         });
 
     } catch (error: any) {
         console.error("Error uploading review.", error);
-    
+
         if (error.response) {
           switch (error.response.status) {
             case 400:
