@@ -3,7 +3,6 @@ import axios from "axios";
 
 const JAVA_BACKEND_URL = process.env.JAVA_BACKEND_URL;
 
-
 const getExperiences = async (req: Request, res: Response) => {
 
   /**
@@ -48,10 +47,10 @@ const getExperiences = async (req: Request, res: Response) => {
     const response = await axios.get(JAVA_BACKEND_URL + '/experiences', { params: filters });
     const experiences = response.data;
 
-    res.json(experiences);
+    return res.json(experiences);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Error to get experiences' });
+      console.error(error);
+      return res.status(500).json({ message: 'Error to get experiences' });
   }
 }
 
@@ -66,15 +65,16 @@ const getExperienceById = async (req: Request, res: Response) => {
     const experience = response.data;
 
     if (response.status === 404) {
-      res.status(404).json({ message: 'Experience not found' });
-    } else {
-      res.status(500).json({ message: 'Internal server error' });
+      return res.status(404).json({ message: 'Experience not found' });
+    } else if (response.status === 500) {
+        return res.status(500).json({ message: 'Internal server error' });
     }
 
-    res.json(experience);
+    return res.json(experience);
+    
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: (error as Error).message });
+      console.error(error);
+      return res.status(500).json({ message: (error as Error).message });
   }
 }
 

@@ -8,7 +8,6 @@ interface CustomRequest extends Request {
   payload?: any; // Adjust the type as necessary
 }
 
-
 const login = async (req: Request, res: Response, next: NextFunction) => {
 
     const { email, password } = req.body;
@@ -27,7 +26,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
 
     try {
         //Send request to the backend to retrieve the jwt
-        const response = await axios.post(`${JAVA_BACKEND_URL}/users/login`, {
+        const response = await axios.post(`${JAVA_BACKEND_URL}/api/autenticacion/login`, {
             email,
             password,
         });
@@ -36,7 +35,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
         const { token } = response.data;
 
         //Send the token and and user details
-        res.json({
+        return res.json({
             message: "Log in successful",
             token,
         });
@@ -67,20 +66,22 @@ const logout = async (req: Request, res: Response) => {
   }
 
   try {
-    await axios.post(`${JAVA_BACKEND_URL}/users/logout`, null, {
+    await axios.post(`${JAVA_BACKEND_URL}/api/autenticacion/logout`, null, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    res.status(200).json({ message: "Sesión cerrada exitosamente" });
+    return res.status(200).json({ message: "Sesión cerrada exitosamente" });
+
   } catch (error) {
     console.error("Error durante el logout:", error);
-    res.status(500).json({ error: "Hubo un problema al cerrar la sesión" });
+    return res.status(500).json({ error: "Hubo un problema al cerrar la sesión" });
   }
 };
 
 const getProfile = async (req: Request, res: Response, next: NextFunction) => {
 
+    const id = req.params.id;
     const token = req.headers.authorization?.split(" ")[1];
 
     if (!token) {
@@ -89,7 +90,7 @@ const getProfile = async (req: Request, res: Response, next: NextFunction) => {
 
     try {
         // Send a request to the backend to retrieve the user's profile
-        const response = await axios.get(`${JAVA_BACKEND_URL}/users/profile`, {
+        const response = await axios.get(`${JAVA_BACKEND_URL}/api/users/profile/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -97,7 +98,11 @@ const getProfile = async (req: Request, res: Response, next: NextFunction) => {
 
         // Extract the user profile data from the response
         const profile = response.data
-        res.status(200).json(profile)
+
+        return res.status(200).json({
+            message: "Retrieved user data successfully.",
+            profile
+        });
 
     } catch (error: any) {
         console.error("Error retrieving profile:", error);
@@ -113,7 +118,7 @@ const getProfile = async (req: Request, res: Response, next: NextFunction) => {
             }
         }
 
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
 
 }
@@ -134,7 +139,7 @@ const updateProfile = async (req: Request, res: Response, next: NextFunction) =>
 
     try {
         // Send the updated data to the backend
-        const response = await axios.put(`${JAVA_BACKEND_URL}/users/profile`, newData, {
+        const response = await axios.put(`${JAVA_BACKEND_URL}/api/users/profile/`, newData, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -143,7 +148,7 @@ const updateProfile = async (req: Request, res: Response, next: NextFunction) =>
         // If successful, return the updated profile data
         const updatedProfile = response.data;
 
-        res.status(200).json({
+        return res.status(200).json({
             message: "Profile updated successfully",
             updatedProfile,
         });
@@ -164,7 +169,7 @@ const updateProfile = async (req: Request, res: Response, next: NextFunction) =>
             }
         }
 
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Internal server error" });
     }
 }
 
@@ -194,12 +199,16 @@ const register = async (req: Request, res: Response) => {
         });
         
         const backendResponse = await axios.post(
-            `${JAVA_BACKEND_URL}/users/register`,
+            `${JAVA_BACKEND_URL}/api/autenticacion/register`,
             validData
         );
         
+        const newUser = backendResponse.data
         // Devolver la respuesta del backend al frontend
-        return res.status(backendResponse.status).json(backendResponse.data);
+        return res.status(200).json({
+            message: "User registered successfully",
+            newUser
+        });
         
     } catch (error: any) {
         
@@ -226,11 +235,11 @@ const register = async (req: Request, res: Response) => {
 
 const verify = (req: CustomRequest, res: Response, next: NextFunction) => {
 
-if (req.authError && req.authError.name === "Unauthorized") {
-return res.status(401).json({ message: "JWT expired" });
-}
+    if (req.authError && req.authError.name === "Unauthorized") {
+        return res.status(401).json({ message: "JWT expired" });
+    }
 
-res.status(200).json(req.payload);
+    return res.status(200).json(req.payload);
 };
 
 export { register, login, verify, logout, getProfile, updateProfile };
