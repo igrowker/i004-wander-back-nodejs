@@ -267,9 +267,7 @@
             "description": "Internal Server Error"
           }
         }
-      }
-    },
-    "/api/users/profile": {
+      },
       "put": {
         "summary": "Update the user's profile",
         "tags": [
@@ -689,6 +687,480 @@
                     "message": {
                       "type": "string",
                       "example": "Internal server error"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update an existing experience",
+        "tags": [
+          "Experiences"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "This endpoint requires a Bearer token for authentication.\nInclude the token in the Authorization header as follows:\nAuthorization: Bearer <your_token_here>\n",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The unique ID of the experience to update.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "title",
+                  "description",
+                  "location",
+                  "providerId",
+                  "price",
+                  "availabilityDates",
+                  "tags",
+                  "rating",
+                  "capacity"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "Horse Riding",
+                    "description": "Name of the experience."
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "One hour of horse riding with an instructor.",
+                    "description": "Detailed description of the experience."
+                  },
+                  "location": {
+                    "type": "string",
+                    "example": "Oviedo, Spain",
+                    "description": "Location where the experience takes place."
+                  },
+                  "providerId": {
+                    "type": "string",
+                    "example": "aoiwufioaujf1983u4aj891u9",
+                    "description": "ID of the user uploading the experience."
+                  },
+                  "price": {
+                    "type": "string",
+                    "example": "65$",
+                    "description": "Price of the experience."
+                  },
+                  "availabilityDates": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "example": [
+                      "2023-12-01",
+                      "2023-12-15"
+                    ],
+                    "description": "Available dates to book the experience."
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Tags associated with the experience."
+                  },
+                  "rating": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Rating of the experience (0-5)."
+                  },
+                  "capacity": {
+                    "type": "number",
+                    "description": "Maximum number of participants for the experience."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Experience updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Experience updated successfully"
+                    },
+                    "updatedExperience": {
+                      "type": "object",
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "description": "Unique identifier of the experience."
+                        },
+                        "title": {
+                          "type": "string",
+                          "description": "Title of the experience."
+                        },
+                        "description": {
+                          "type": "string",
+                          "description": "Detailed description of the experience."
+                        },
+                        "location": {
+                          "type": "string",
+                          "description": "Location where the experience takes place."
+                        },
+                        "providerId": {
+                          "type": "string",
+                          "description": "ID of the user uploading the experience."
+                        },
+                        "price": {
+                          "type": "number",
+                          "format": "float",
+                          "description": "Price of the experience."
+                        },
+                        "availabilityDates": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "description": "List of available dates for the experience."
+                        },
+                        "tags": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "Tags associated with the experience."
+                        },
+                        "rating": {
+                          "type": "number",
+                          "format": "float",
+                          "description": "Rating of the experience."
+                        },
+                        "capacity": {
+                          "type": "number",
+                          "description": "Maximum number of participants for the experience."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request || Invalid data provided (e.g., missing required fields).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid input data"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "Title is required",
+                        "Price must be a valid number"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized || User not authorized to update experience (e.g., missing or invalid token).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized access"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Experience not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Experience not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error || An unexpected error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    },
+                    "details": {
+                      "type": "string",
+                      "example": "Unexpected error occurred while processing the request."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/experiences": {
+      "post": {
+        "summary": "Register a new experience",
+        "tags": [
+          "Experiences"
+        ],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "description": "This endpoint requires a Bearer token for authentication.\nInclude the token in the Authorization header as follows:\nAuthorization: Bearer <your_token_here>\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "title",
+                  "description",
+                  "location",
+                  "providerId",
+                  "price",
+                  "availabilityDates",
+                  "tags",
+                  "rating",
+                  "capacity"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "Horse Riding",
+                    "description": "Name of the experience."
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "One hour of horse riding with an instructor.",
+                    "description": "Detailed description of the experience."
+                  },
+                  "location": {
+                    "type": "string",
+                    "example": "Oviedo, Spain",
+                    "description": "Location where the experience takes place."
+                  },
+                  "providerId": {
+                    "type": "string",
+                    "example": "aoiwufioaujf1983u4aj891u9",
+                    "description": "ID of the user uploading the experience."
+                  },
+                  "price": {
+                    "type": "string",
+                    "example": "65$",
+                    "description": "Price of the experience."
+                  },
+                  "availabilityDates": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "date"
+                    },
+                    "example": [
+                      "2023-12-01",
+                      "2023-12-15"
+                    ],
+                    "description": "Available dates to book the experience."
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Tags associated with the experience."
+                  },
+                  "rating": {
+                    "type": "number",
+                    "format": "float",
+                    "description": "Rating of the experience (0-5)."
+                  },
+                  "capacity": {
+                    "type": "number",
+                    "description": "Maximum number of participants for the experience."
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Date when the experience was created."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Experience registered successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "description": "Unique identifier of the experience."
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "Title of the experience."
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "Detailed description of the experience."
+                    },
+                    "location": {
+                      "type": "string",
+                      "description": "Location where the experience takes place."
+                    },
+                    "hostId": {
+                      "type": "string",
+                      "description": "Unique identifier of the host."
+                    },
+                    "price": {
+                      "type": "number",
+                      "format": "float",
+                      "description": "Price of the experience."
+                    },
+                    "availabilityDates": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "format": "date-time"
+                      },
+                      "description": "List of available dates for the experience."
+                    },
+                    "tags": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Tags associated with the experience."
+                    },
+                    "rating": {
+                      "type": "number",
+                      "format": "float",
+                      "description": "Rating of the experience."
+                    },
+                    "capacity": {
+                      "type": "number",
+                      "description": "Maximum number of participants for the experience."
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Date when the experience was created."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request || Invalid data provided (e.g., missing required fields).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid input data"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "Title is required",
+                        "Price must be a valid number"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized || User not authorized to create experience (e.g., missing or invalid token).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Unauthorized access"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error || An unexpected error occurred",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Internal server error"
+                    },
+                    "details": {
+                      "type": "string",
+                      "example": "Unexpected error occurred while processing the request."
                     }
                   }
                 }

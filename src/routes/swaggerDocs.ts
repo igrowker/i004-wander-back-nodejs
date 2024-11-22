@@ -44,7 +44,7 @@
  *         description: Internal Server Error
  */
 
-//PASSWORD RECOVERY ENDPOINT
+// PASSWORD RECOVERY ENDPOINT
 /**
  * @swagger
  * /api/recoverPassword:
@@ -106,7 +106,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: User logged out successfully
+ *                   example: "User logged out successfully"
  *       401:
  *         description: Unauthorized || No valid token provided
  *       500:
@@ -118,7 +118,7 @@
  *               properties:
  *                 error:
  *                   type: string
- *                   example: There was a problem logging out
+ *                   example: "There was a problem logging out"
  */
 
 // GET USER PROFILE ENDPOINT
@@ -169,7 +169,7 @@
 // UPDATE USER PROFILE ENDPOINT
 /**
  * @swagger
- * /api/users/profile:
+ * /api/auth/profile:
  *   put:
  *     summary: Update the user's profile
  *     tags: [UserProfile]
@@ -229,11 +229,6 @@
  *                       items:
  *                         type: string
  *                       example: ["adventure", "beach"]
- *                   example:
- *                     email: "newemail@mail.com"
- *                     name: "New Name"
- *                     location: "New York, USA"
- *                     preferences: ["adventure", "beach"]
  *       400:
  *         description: Bad Request || Invalid data provided
  *       401:
@@ -249,8 +244,8 @@
  * @swagger
  * /api/auth/register:
  *   post:
- *     summary: Registra un nuevo usuario
- *     description: Valida los datos del usuario, los envía al backend principal y devuelve la respuesta al frontend.
+ *     summary: Register a new user
+ *     description: Validates user data, sends it to the main backend, and returns the response to the frontend.
  *     tags: [Register]
  *     requestBody:
  *       required: true
@@ -266,38 +261,38 @@
  *             properties:
  *               name:
  *                 type: string
- *                 example: John Doe
- *                 description: Nombre completo del usuario.
+ *                 example: "John Doe"
+ *                 description: Full name of the user.
  *               email:
  *                 type: string
  *                 format: email
- *                 example: john.doe@sample.com
- *                 description: Correo electrónico del usuario.
+ *                 example: "john.doe@sample.com"
+ *                 description: User's email address.
  *               password:
  *                 type: string
  *                 format: password
- *                 example: Passw0rd@
- *                 description: Contraseña del usuario (8-12 caracteres, al menos una mayúscula, una minúscula, un número y un símbolo `@#!`).
+ *                 example: "Passw0rd@"
+ *                 description: User's password (8-12 characters, at least one uppercase letter, one lowercase letter, one number, and one special character `@#!`).
  *               role:
  *                 type: string
  *                 enum:
  *                   - tourist
  *                   - provider
- *                 example: tourist
- *                 description: Rol del usuario.
+ *                 example: "tourist"
+ *                 description: User's role.
  *               preferences:
  *                 type: array
  *                 items:
  *                   type: string
  *                 example: ["adventure", "beach"]
- *                 description: Preferencias personales del usuario.
+ *                 description: User's personal preferences.
  *               location:
  *                 type: string
- *                 example: New York, USA
- *                 description: Ubicación del usuario.
+ *                 example: "New York, USA"
+ *                 description: User's location.
  *     responses:
  *       200:
- *         description: Registro exitoso
+ *         description: Registration successful
  *         content:
  *           application/json:
  *             schema:
@@ -305,12 +300,12 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: User registered successfully.
+ *                   example: "User registered successfully."
  *                 userId:
  *                   type: string
- *                   example: 64afc392d9e3b0a9e8c92f11
+ *                   example: "64afc392d9e3b0a9e8c92f11"
  *       400:
- *         description: Errores de validación
+ *         description: Validation errors
  *         content:
  *           application/json:
  *             schema:
@@ -321,11 +316,11 @@
  *                   items:
  *                     type: string
  *                   example:
- *                     - "El nombre es obligatorio"
- *                     - "Correo electrónico inválido"
- *                     - "La contraseña debe tener entre 8 y 12 caracteres"
+ *                     - "Name is required"
+ *                     - "Invalid email address"
+ *                     - "Password must be between 8 and 12 characters"
  *       500:
- *         description: Error interno del servidor
+ *         description: Internal server error
  *         content:
  *           application/json:
  *             schema:
@@ -333,10 +328,10 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Internal server error.
+ *                   example: "Internal server error."
  *                 details:
  *                   type: string
- *                   example: Error inesperado.
+ *                   example: "Unexpected error."
  */
 
 // GET EXPERIENCES ENDPOINT
@@ -348,7 +343,7 @@
  *     tags: [Experiences]
  *     parameters:
  *       - in: query
- *         name: Any filter parameter
+ *         name: filter
  *         schema:
  *           type: object
  *         description: Dynamic query parameters for filtering experiences
@@ -380,7 +375,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Error al obtener experiencias
+ *                   example: "Error retrieving experiences"
  */
 
 // GET EXPERIENCES BY ID ENDPOINT
@@ -457,7 +452,7 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Experience not found
+ *                   example: "Experience not found"
  *       500:
  *         description: Internal server error.
  *         content:
@@ -467,5 +462,348 @@
  *               properties:
  *                 message:
  *                   type: string
- *                   example: Internal server error
+ *                   example: "Internal server error"
+ */
+
+// UPLOAD EXPERIENCE ENDPOINT
+/**
+ * @swagger
+ * /api/experiences:
+ *   post:
+ *     summary: Register a new experience
+ *     tags: [Experiences]
+ *     security:
+ *       - bearerAuth: []
+ *     description: |
+ *       This endpoint requires a Bearer token for authentication.
+ *       Include the token in the Authorization header as follows:
+ *       Authorization: Bearer <your_token_here>
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - description
+ *               - location
+ *               - providerId
+ *               - price
+ *               - availabilityDates
+ *               - tags
+ *               - rating
+ *               - capacity
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: "Horse Riding"
+ *                 description: Name of the experience.
+ *               description:
+ *                 type: string
+ *                 example: "One hour of horse riding with an instructor."
+ *                 description: Detailed description of the experience.
+ *               location:
+ *                 type: string
+ *                 example: "Oviedo, Spain"
+ *                 description: Location where the experience takes place.
+ *               providerId:
+ *                 type: string
+ *                 example: "aoiwufioaujf1983u4aj891u9"
+ *                 description: ID of the user uploading the experience.
+ *               price:
+ *                 type: string
+ *                 example: "65$"
+ *                 description: Price of the experience.
+ *               availabilityDates:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: date
+ *                 example: ["2023-12-01", "2023-12-15"]
+ *                 description: Available dates to book the experience.
+ *               tags:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: Tags associated with the experience.
+ *               rating:
+ *                 type: number
+ *                 format: float
+ *                 description: Rating of the experience (0-5).
+ *               capacity:
+ *                 type: number
+ *                 description: Maximum number of participants for the experience.
+ *               createdAt:
+ *                 type: string
+ *                 format: date-time
+ *                 description: Date when the experience was created.
+ *     responses:
+ *       200:
+ *         description: Experience registered successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                   description: Unique identifier of the experience.
+ *                 title:
+ *                   type: string
+ *                   description: Title of the experience.
+ *                 description:
+ *                   type: string
+ *                   description: Detailed description of the experience.
+ *                 location:
+ *                   type: string
+ *                   description: Location where the experience takes place.
+ *                 hostId:
+ *                   type: string
+ *                   description: Unique identifier of the host.
+ *                 price:
+ *                   type: number
+ *                   format: float
+ *                   description: Price of the experience.
+ *                 availabilityDates:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                     format: date-time
+ *                   description: List of available dates for the experience.
+ *                 tags:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   description: Tags associated with the experience.
+ *                 rating:
+ *                   type: number
+ *                   format: float
+ *                   description: Rating of the experience.
+ *                 capacity:
+ *                   type: number
+ *                   description: Maximum number of participants for the experience.
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                   description: Date when the experience was created.
+ *       400:
+ *         description: Bad Request || Invalid data provided (e.g., missing required fields).
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid input data"
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   example:
+ *                     - "Title is required"
+ *                     - "Price must be a valid number"
+ *       401:
+ *         description: Unauthorized || User not authorized to create experience (e.g., missing or invalid token).
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Unauthorized access"
+ *       500:
+ *         description: Internal Server Error || An unexpected error occurred
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error"
+ *                 details:
+ *                   type: string
+ *                   example: "Unexpected error occurred while processing the request."
+ */
+
+// UPDATE EXPERIENCE ENDPOINT
+/**
+ * @swagger
+ * /api/experiences/{id}:
+ *   put:
+ *     summary: Update an existing experience
+ *     tags: [Experiences]
+ *     security:
+ *       - bearerAuth: []
+ *     description: |
+ *       This endpoint requires a Bearer token for authentication.
+ *       Include the token in the Authorization header as follows:
+ *       Authorization: Bearer <your_token_here>
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: The unique ID of the experience to update.
+ *         schema:
+ *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - title
+ *               - description
+ *               - location
+ *               - providerId
+ *               - price
+ *               - availabilityDates
+ *               - tags
+ *               - rating
+ *               - capacity
+ *             properties:
+ *               title:
+ *                 type: string
+ *                 example: "Horse Riding"
+ *                 description: Name of the experience.
+ *               description:
+ *                 type: string
+ *                 example: "One hour of horse riding with an instructor."
+ *                 description: Detailed description of the experience.
+ *               location:
+ *                 type: string
+ *                 example: "Oviedo, Spain"
+ *                 description: Location where the experience takes place.
+ *               providerId:
+ *                 type: string
+ *                 example: "aoiwufioaujf1983u4aj891u9"
+ *                 description: ID of the user uploading the experience.
+ *               price:
+ *                 type: string
+ *                 example: "65$"
+ *                 description: Price of the experience.
+ *               availabilityDates:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                   format: date
+ *                 example: ["2023-12-01", "2023-12-15"]
+ *                 description: Available dates to book the experience.
+ *               tags:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 description: Tags associated with the experience.
+ *               rating:
+ *                 type: number
+ *                 format: float
+ *                 description: Rating of the experience (0-5).
+ *               capacity:
+ *                 type: number
+ *                 description: Maximum number of participants for the experience.
+ *     responses:
+ *       200:
+ *         description: Experience updated successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Experience updated successfully"
+ *                 updatedExperience:
+ *                   type: object
+ *                   properties:
+ *                     _id:
+ *                       type: string
+ *                       description: Unique identifier of the experience.
+ *                     title:
+ *                       type: string
+ *                       description: Title of the experience.
+ *                     description:
+ *                       type: string
+ *                       description: Detailed description of the experience.
+ *                     location:
+ *                       type: string
+ *                       description: Location where the experience takes place.
+ *                     providerId:
+ *                       type: string
+ *                       description: ID of the user uploading the experience.
+ *                     price:
+ *                       type: number
+ *                       format: float
+ *                       description: Price of the experience.
+ *                     availabilityDates:
+ *                       type: array
+ *                       items:
+ *                         type: string
+ *                         format: date-time
+ *                       description: List of available dates for the experience.
+ *                     tags:
+ *                       type: array
+ *                       items:
+ *                         type: string
+ *                       description: Tags associated with the experience.
+ *                     rating:
+ *                       type: number
+ *                       format: float
+ *                       description: Rating of the experience.
+ *                     capacity:
+ *                       type: number
+ *                       description: Maximum number of participants for the experience.
+ *       400:
+ *         description: Bad Request || Invalid data provided (e.g., missing required fields).
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid input data"
+ *                 errors:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   example:
+ *                     - "Title is required"
+ *                     - "Price must be a valid number"
+ *       401:
+ *         description: Unauthorized || User not authorized to update experience (e.g., missing or invalid token).
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Unauthorized access"
+ *       404:
+ *         description: Experience not found.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Experience not found"
+ *       500:
+ *         description: Internal Server Error || An unexpected error occurred
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error"
+ *                 details:
+ *                   type: string
+ *                   example: "Unexpected error occurred while processing the request."
  */
