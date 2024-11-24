@@ -4,9 +4,9 @@ import { register, login, verify, logout, getProfile, updateProfile } from "../c
 import { isAuthenticated } from "../middlewares/verifyToken.middleware";
 
 router.post("/login", login);
-router.post("/logout", logout);
-router.get("/profile", getProfile)
-router.put("/profile", updateProfile)
+router.post("/logout", isAuthenticated, logout);
+router.get("/profile", isAuthenticated, getProfile)
+router.put("/profile", isAuthenticated, updateProfile)
 router.get("/verify", isAuthenticated, verify);
 router.post("/register", register);
 
