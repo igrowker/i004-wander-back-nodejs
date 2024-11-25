@@ -908,3 +908,73 @@
  *                   type: string
  *                   example: "An unexpected error occurred. Please try again later."
  */
+
+// GET BOOKING BY ID
+/**
+ * @swagger
+ * /api/bookings/{id}:
+ *   get:
+ *     summary: Retrieves a booking by ID
+ *     description: Returns the booking data for the specified ID
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the booking to retrieve
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The authorization token
+ *     responses:
+ *       200:
+ *         description: Booking data retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                   description: ID de la reserva
+ *                 experienceId:
+ *                   type: string
+ *                   description: ID de la experiencia
+ *                 userId:
+ *                   type: string
+ *                   description: ID del usuario
+ *                 status:
+ *                   type: string
+ *                   description: Estado de la reserva
+ *                 bookingDate:
+ *                   type: string
+ *                   format: date-time
+ *                   description: Fecha de la reserva
+ *                 totalPrice:
+ *                   type: number
+ *                   format: float
+ *                   description: Precio total de la reserva
+ *                 participants:
+ *                   type: integer
+ *                   description: Número de participantes
+ *                 paymentStatus:
+ *                   type: string
+ *                   description: Estado del pago
+ *                 createdAt:
+ *                   type: string
+ *                   format: date-time
+ *                   description: Fecha de creación de la reserva
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   description: Error message
+ */
