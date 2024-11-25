@@ -1,5 +1,6 @@
-import { Response, NextFunction, Request } from "express";
+import { Response, Request, NextFunction } from "express";
 import axios from "axios";
+import { uploadExperienceSchema, updateExperienceSchema } from "../types/yup-validations";
 
 const JAVA_BACKEND_URL = process.env.JAVA_BACKEND_URL;
 
@@ -80,23 +81,13 @@ const getExperienceById = async (req: Request, res: Response) => {
 
 const uploadExperience = async (req: Request, res: Response) => {
 
-  const token = req.headers.authorization?.split(" ")[1];
-
-  if (!token) {
-    return res.status(401).json({ message: "No token provided" });
-  }
-
-  const { title, description, location, price, availabilityDates, tags, rating, capacity } = req.body || {};
-
-  // Validate required fields
-  if (!title || !description || !location || !price || !availabilityDates || !tags || !rating || !capacity) {
-    return res.status(400).json({ message: 'All fields are required. Please provide title, description, location, price, availabilityDates, tags, rating, and capacity.' });
-  }
+  const validData = await uploadExperienceSchema.validate(req.body, {
+    abortEarly: false,
+  });
 
   try {
-    const response = await axios.post(`${JAVA_BACKEND_URL}/experiences`, {
-      title, description, location, price, availabilityDates, tags, rating, capacity
-    });
+
+    const response = await axios.post(`${JAVA_BACKEND_URL}/experiences`, validData);
 
     const { experience } = response.data;
 
@@ -104,6 +95,7 @@ const uploadExperience = async (req: Request, res: Response) => {
       message: "Experience created successfully",
       experience
     });
+    
   } catch (error: any) {
     console.error("Error uploading experience.", error);
 
@@ -125,24 +117,18 @@ const uploadExperience = async (req: Request, res: Response) => {
 const updateExperience = async (req: Request, res: Response) => {
 
   const id = req.params.id;
-  const token = req.headers.authorization?.split(" ")[1];
 
-  if (!token) {
-    return res.status(401).json({ message: "No token provided" });
-  }
+  const validData = await updateExperienceSchema.validate(req.body, {
+    abortEarly: false,
+  });
 
-  const newData = req.body || {};
-
-  if (Object.keys(newData).length === 0) {
+  if (Object.keys(validData).length === 0) {
     return res.status(400).json({ message: "No data provided to update" });
   }
 
   try {
-    const response = await axios.put(`${JAVA_BACKEND_URL}/experiences/${id}`, newData, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+
+    const response = await axios.put(`${JAVA_BACKEND_URL}/experiences/${id}`, validData);
 
     const updatedExperience = response.data;
     return res.status(200).json({
