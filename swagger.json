@@ -1273,6 +1273,252 @@
           }
         }
       }
+    },
+    "/api/bookings/{id}": {
+      "get": {
+        "summary": "Retrieves a booking by ID",
+        "description": "Returns the booking data for the specified ID",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the booking to retrieve"
+          },
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The authorization token"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Booking data retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "_id": {
+                      "type": "string",
+                      "description": "ID de la reserva"
+                    },
+                    "experienceId": {
+                      "type": "string",
+                      "description": "ID de la experiencia"
+                    },
+                    "userId": {
+                      "type": "string",
+                      "description": "ID del usuario"
+                    },
+                    "status": {
+                      "type": "string",
+                      "description": "Estado de la reserva"
+                    },
+                    "bookingDate": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Fecha de la reserva"
+                    },
+                    "totalPrice": {
+                      "type": "number",
+                      "format": "float",
+                      "description": "Precio total de la reserva"
+                    },
+                    "participants": {
+                      "type": "integer",
+                      "description": "Número de participantes"
+                    },
+                    "paymentStatus": {
+                      "type": "string",
+                      "description": "Estado del pago"
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "description": "Fecha de creación de la reserva"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "description": "Error message"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/bookings/create": {
+      "post": {
+        "summary": "Create a booking",
+        "description": "Creates a new booking by validating the request body and forwarding it to the main backend service.",
+        "tags": [
+          "Bookings"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "experienceId": {
+                    "type": "string",
+                    "description": "The ID of the experience to be booked.",
+                    "example": "650f9f1bfc13ae1c79000001"
+                  },
+                  "userId": {
+                    "type": "string",
+                    "description": "The ID of the user making the booking.",
+                    "example": "650f9f1bfc13ae1c79000002"
+                  },
+                  "participants": {
+                    "type": "integer",
+                    "description": "The number of participants for the booking.",
+                    "example": 2
+                  },
+                  "totalPrice": {
+                    "type": "number",
+                    "description": "The total price for the booking.",
+                    "example": 120.5
+                  }
+                },
+                "required": [
+                  "experienceId",
+                  "userId",
+                  "participants",
+                  "totalPrice"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Booking successfully created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Booking confirmed"
+                    },
+                    "reserva": {
+                      "type": "object",
+                      "properties": {
+                        "_id": {
+                          "type": "string",
+                          "example": "650f9f1bfc13ae1c79000003"
+                        },
+                        "experienceId": {
+                          "type": "string",
+                          "example": "650f9f1bfc13ae1c79000001"
+                        },
+                        "userId": {
+                          "type": "string",
+                          "example": "650f9f1bfc13ae1c79000002"
+                        },
+                        "status": {
+                          "type": "string",
+                          "description": "The current status of the booking.",
+                          "example": "confirmed"
+                        },
+                        "bookingDate": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-11-25T10:30:00.000Z"
+                        },
+                        "totalPrice": {
+                          "type": "number",
+                          "example": 120.5
+                        },
+                        "participants": {
+                          "type": "integer",
+                          "example": 2
+                        },
+                        "paymentStatus": {
+                          "type": "string",
+                          "description": "The payment status of the booking.",
+                          "example": "paid"
+                        },
+                        "createdAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2024-11-24T15:00:00.000Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or booking rejected.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Validation error"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "participants must be greater than 0"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Error processing the request"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {},
