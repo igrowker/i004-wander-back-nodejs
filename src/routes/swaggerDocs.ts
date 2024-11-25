@@ -468,7 +468,7 @@
 // UPLOAD EXPERIENCE ENDPOINT
 /**
  * @swagger
- * /api/experiences:
+ * /api/experiences/create:
  *   post:
  *     summary: Register a new experience
  *     tags: [Experiences]
@@ -811,7 +811,7 @@
 // UPLOAD REVIEW ENDPOINT
 /**
  * @swagger
- * /api/reviews:
+ * /api/reviews/create:
  *   post:
  *     summary: Upload a new review
  *     tags: [Reviews]
@@ -1086,4 +1086,74 @@
  *                 message:
  *                   type: string
  *                   example: "Error processing the request"
+ */
+
+// DELETE REVIEW ENDPOINT
+/**
+ * @swagger
+ * /api/reviews/{id}:
+ *   delete:
+ *     summary: Delete a review by ID
+ *     tags: [Reviews]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         required: true
+ *         description: The unique ID of the review to delete.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: Review deleted successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Review deleted successfully."
+ *                 response:
+ *                   type: object
+ *                   description: The response data from the backend.
+ *       400:
+ *         description: Invalid request. Please check the review ID and try again.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid request. Please check the review ID and try again."
+ *       404:
+ *         description: Review not found. Please ensure the review exists.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Review not found. Please ensure the review exists."
+ *       401:
+ *         description: Unauthorized. Please check your credentials.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Unauthorized. Please check your credentials."
+ *       500:
+ *         description: An unexpected error occurred while deleting the review. Please try again later.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "An unexpected error occurred while deleting the review. Please try again later."
  */
