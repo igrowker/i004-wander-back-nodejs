@@ -4,6 +4,6 @@ import { getBookingsById, makeBookings } from "../controllers/bookings.controlle
 import { isAuthenticated } from "../middlewares/verifyToken.middleware";
 
 router.get('/:id', isAuthenticated, getBookingsById);
-router.post('/', isAuthenticated, makeBookings);
+router.post('/create', isAuthenticated, makeBookings);
 
 export default router;

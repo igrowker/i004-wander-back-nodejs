@@ -982,7 +982,7 @@
 // CREATE A BOOKING
 /**
  * @swagger
- * /api/bookings:
+ * /api/bookings/create:
  *   post:
  *     summary: Create a booking
  *     description: Creates a new booking by validating the request body and forwarding it to the main backend service.
