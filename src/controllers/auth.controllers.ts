@@ -1,6 +1,7 @@
-import { Response, NextFunction, Request } from "express";
+import { Response, Request, NextFunction } from "express";
 import axios from "axios";
 import * as yup from "yup";
+import { userRegistrationSchema, updateProfileSchema } from "../types/yup-validations";
 
 const JAVA_BACKEND_URL = process.env.JAVA_BACKEND_URL;
 
@@ -59,42 +60,36 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const logout = async (req: Request, res: Response) => {
-  const token = req.headers.authorization?.split(" ")[1];
 
-  if (!token) {
-    return res.status(401).json({ message: "No token provided" });
-  }
+    try {
+        const response = await axios.post(`${JAVA_BACKEND_URL}/api/autenticacion/logout`, null);
+        
+        // Optionally check the response from the backend
+        if (response.status === 200) {
+            return res.status(200).json({ message: "Sesión cerrada exitosamente" });
+        } else {
+            return res.status(response.status).json({ message: "Error during logout" });
+        }
 
-  try {
-    await axios.post(`${JAVA_BACKEND_URL}/api/autenticacion/logout`, null, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    return res.status(200).json({ message: "Sesión cerrada exitosamente" });
+    } catch (error) {
+        console.error("Error durante el logout:", error);
+        
+        // More specific error handling
+        if (axios.isAxiosError(error) && error.response) {
+            return res.status(error.response.status).json({ error: "Hubo un problema al cerrar la sesión" });
+        }
 
-  } catch (error) {
-    console.error("Error durante el logout:", error);
-    return res.status(500).json({ error: "Hubo un problema al cerrar la sesión" });
-  }
+        return res.status(500).json({ error: "Hubo un problema al cerrar la sesión" });
+    }
 };
 
 const getProfile = async (req: Request, res: Response, next: NextFunction) => {
 
     const id = req.params.id;
-    const token = req.headers.authorization?.split(" ")[1];
-
-    if (!token) {
-        return res.status(401).json({ message: "No token provided" });
-    }
 
     try {
         // Send a request to the backend to retrieve the user's profile
-        const response = await axios.get(`${JAVA_BACKEND_URL}/api/users/profile/${id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+        const response = await axios.get(`${JAVA_BACKEND_URL}/api/users/profile/${id}`);
 
         // Extract the user profile data from the response
         const profile = response.data
@@ -124,26 +119,18 @@ const getProfile = async (req: Request, res: Response, next: NextFunction) => {
 }
 
 const updateProfile = async (req: Request, res: Response, next: NextFunction) => {
+    
+    const validData = await updateProfileSchema.validate(req.body, {
+        abortEarly: false,
+    });
 
-    const token = req.headers.authorization?.split("")[1];
-
-    if (!token) {
-        return res.status(401).json({ message: "No token provided" });
-    }
-
-    const newData = req.body
-
-    if (Object.keys(newData).length === 0) {
+    if (Object.keys(validData).length === 0) {
         return res.status(400).json({ message: "No data provided to update" });
     }
 
     try {
         // Send the updated data to the backend
-        const response = await axios.put(`${JAVA_BACKEND_URL}/api/users/profile/`, newData, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
+        const response = await axios.put(`${JAVA_BACKEND_URL}/api/users/profile/`, validData);
 
         // If successful, return the updated profile data
         const updatedProfile = response.data;
@@ -173,25 +160,8 @@ const updateProfile = async (req: Request, res: Response, next: NextFunction) =>
     }
 }
 
-// validando los datos del usuario nuevo
-const userRegistrationSchema = yup.object().shape({
-    name: yup.string().required('El nombre es obligatorio'),
-    email: yup.string().email('Correo electrónico inválido').required('El correo es obligatorio'),
-    password: yup
-    .string()
-    .required('La contraseña es obligatoria')
-    .min(8, 'La contraseña debe tener al menos 8 caracteres')
-    .max(12, 'La contraseña no puede tener más de 12 caracteres')
-    .matches(
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#!]).{8,12}$/,
-        'La contraseña debe tener al menos una mayúscula, una minúscula, un número y un símbolo (@#!)'
-    ),
-    role: yup.string().oneOf(['tourist', 'provider'], 'Rol inválido').required('El rol es obligatorio'),
-    preferences: yup.array().of(yup.string()).optional(),
-    location: yup.string().optional(),
-});
-
 const register = async (req: Request, res: Response) => {
+
     try {
         // Validación de los datos enviados por el frontend
         const validData = await userRegistrationSchema.validate(req.body, {
