@@ -141,3 +141,13 @@ export const updateReviewSchema = uploadReviewSchema.concat(
     })
 );
 
+// Schema for make a booking
+export const bookingSchema = yup.object().shape({
+    experienceId: yup.string().required(),
+    userId: yup.string().required(),
+    status: yup.string().oneOf(['pending', 'confirmed', 'canceled']).required(),
+    bookingDate: yup.date().required(),
+    totalPrice: yup.number().required(),
+    participants: yup.number().required(),
+    paymentStatus: yup.string().oneOf(['paid', 'pending']).required(),
+  });
