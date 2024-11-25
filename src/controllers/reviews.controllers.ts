@@ -38,4 +38,33 @@ const uploadReview = async (req: Request, res: Response) => {
   }
 };
 
-export { uploadReview }
+const deleteReview = async (req: Request, res: Response) => {
+
+  const id = req.params.id;
+
+  try {
+    const response = await axios.delete(`${JAVA_BACKEND_URL}/reviews/${id}`)
+
+    return res.status(200).json({
+      message: "Review deleted successfully.",
+      response: response.data
+    });
+  } catch (error: any) {
+    console.error("Error deleting review.", error);
+
+    if (error.response) {
+      switch (error.response.status) {
+        case 400:
+          return res.status(400).json({ message: "Invalid request. Please check the review ID and try again." });
+        case 404:
+          return res.status(404).json({ message: "Review not found. Please ensure the review exists." });
+        case 401:
+          return res.status(401).json({ message: "Unauthorized. Please check your credentials." });
+        default:
+          return res.status(500).json({ message: "An unexpected error occurred while deleting the review. Please try again later." });
+      }
+    }
+  }
+}
+
+export { uploadReview, deleteReview }
