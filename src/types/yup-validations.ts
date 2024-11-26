@@ -141,3 +141,12 @@ export const updateReviewSchema = uploadReviewSchema.concat(
     })
 );
 
+export const userVerification = yup.object().shape({
+    email: yup.string()
+        .email('Invalid email address')
+        .required('Email is required'),
+    
+    verificationCode: yup.string()
+        .matches(/^\d{6}$/, 'Verification code must be exactly 6 digits')
+        .required('Verification code is required'),
+});
