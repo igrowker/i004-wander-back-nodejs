@@ -203,6 +203,34 @@ const register = async (req: Request, res: Response) => {
     }
 };
 
+const verificationCode = async (req: Request, res: Response) => {
+    try {
+        // Send a request to the backend to verify the user
+        const response = await axios.post(
+            `${JAVA_BACKEND_URL}/api/autenticacion/verify-user`,
+            req.body // Assuming you want to send the request body
+        );
+
+        // Return the response from the backend
+        return res.status(200).json({
+            message: "Verification successful",
+            data: response.data,
+        });
+        
+    } catch (error: any) {
+        console.error("Error verifying user:", error);
+
+        if (axios.isAxiosError(error) && error.response) {
+            return res.status(error.response.status).json({
+                message: "Error communicating with the verification service",
+                details: error.response.data,
+            });
+        }
+
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
+
 const verify = (req: CustomRequest, res: Response, next: NextFunction) => {
 
     if (req.authError && req.authError.name === "Unauthorized") {
@@ -212,4 +240,4 @@ const verify = (req: CustomRequest, res: Response, next: NextFunction) => {
     return res.status(200).json(req.payload);
 };
 
-export { register, login, verify, logout, getProfile, updateProfile };
+export { register, login, verify, logout, getProfile, updateProfile, verificationCode };
