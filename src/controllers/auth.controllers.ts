@@ -1,7 +1,7 @@
 import { Response, Request, NextFunction } from "express";
 import axios from "axios";
 import * as yup from "yup";
-import { userRegistrationSchema, updateProfileSchema } from "../types/yup-validations";
+import { userRegistrationSchema, updateProfileSchema, userVerification } from "../types/yup-validations";
 
 const JAVA_BACKEND_URL = process.env.JAVA_BACKEND_URL;
 
@@ -166,7 +166,7 @@ const register = async (req: Request, res: Response) => {
         // Validación de los datos enviados por el frontend
         const validData = await userRegistrationSchema.validate(req.body, {
             abortEarly: false,
-        });
+        })
         
         const backendResponse = await axios.post(
             `${JAVA_BACKEND_URL}/api/autenticacion/register`,
@@ -204,11 +204,17 @@ const register = async (req: Request, res: Response) => {
 };
 
 const verificationCode = async (req: Request, res: Response) => {
+
     try {
+
+        const validData = await userVerification.validate(req.body, {
+            abortEarly: false
+        })
+        
         // Send a request to the backend to verify the user
         const response = await axios.post(
             `${JAVA_BACKEND_URL}/api/autenticacion/verify-user`,
-            req.body // Assuming you want to send the request body
+            validData // Assuming you want to send the request body
         );
 
         // Return the response from the backend

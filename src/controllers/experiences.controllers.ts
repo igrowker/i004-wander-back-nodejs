@@ -6,54 +6,35 @@ const JAVA_BACKEND_URL = process.env.JAVA_BACKEND_URL;
 
 const getExperiences = async (req: Request, res: Response) => {
 
-  /**
-   *  OTRA MANERA DE HACERLO
-   * 
-       interface Filters {
-          location?: string;
-          minPrice?: number;
-          maxPrice?: number;
-          date?: string;      // Formato ISO (YYYY-MM-DD)
-          startDate?: string; // Formato ISO (YYYY-MM-DD)
-          endDate?: string;   // Formato ISO (YYYY-MM-DD)
-      }
-  
-      const { location, minPrice, maxPrice, startDate, endDate } = req.query;
-      
-          // Construir los parámetros de filtro
-      const filters: Filters = {
-          location: location as string,
-          minPrice: minPrice ? parseFloat(minPrice as string) : undefined,
-          maxPrice: maxPrice ? parseFloat(maxPrice as string) : undefined,
-          date: date as string,
-          startDate: startDate as string,
-          endDate: endDate as string,
-      };
-  
-      // Realizar la solicitud al backend principal con los filtros
-      const response = await axios.get(JAVA_BACKEND_URL + '/experiences', { params: filters });
-  
-      // Enviar los datos filtrados al cliente
-      res.json(response.data);
-   *
-   * 
-   * 
-   *  
-  */
-
-
   const filters = req.query;
 
   try {
     const response = await axios.get(JAVA_BACKEND_URL + '/experiences', { params: filters });
     const experiences = response.data;
 
+    if (!experiences || experiences.length === 0) {
+      return res.status(404).json({ message: 'No experiences found' });
+    }
+
     return res.json(experiences);
+    
   } catch (error) {
       console.error(error);
-      return res.status(500).json({ message: 'Error to get experiences' });
+      if (axios.isAxiosError(error) && error.response) {
+          switch (error.response.status) {
+              case 400:
+                  return res.status(400).json({ message: "Bad request. Please check your parameters." });
+              case 404:
+                  return res.status(404).json({ message: "Not found. Please check the URL." });
+              case 500:
+                  return res.status(500).json({ message: "Internal server error." });
+              default:
+                  return res.status(500).json({ message: "An unexpected error occurred." });
+          }
+      }
+      return res.status(500).json({ message: 'Error to get experiences', error: (error as Error).message });
   }
-}
+};
 
 
 const getExperienceById = async (req: Request, res: Response) => {
