@@ -151,3 +151,13 @@ export const bookingSchema = yup.object().shape({
     participants: yup.number().required(),
     paymentStatus: yup.string().oneOf(['paid', 'pending']).required(),
   });
+
+export const userVerification = yup.object().shape({
+    email: yup.string()
+        .email('Invalid email address')
+        .required('Email is required'),
+    
+    verificationCode: yup.string()
+        .matches(/^\d{6}$/, 'Verification code must be exactly 6 digits')
+        .required('Verification code is required'),
+});

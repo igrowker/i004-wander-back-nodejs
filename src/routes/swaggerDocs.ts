@@ -1157,3 +1157,84 @@
  *                   type: string
  *                   example: "An unexpected error occurred while deleting the review. Please try again later."
  */
+
+//VERIFY USER ENDPOINT
+/**
+ * @swagger
+ * /api/auth/verify:
+ *   post:
+ *     summary: Verify a user
+ *     tags: [UserAuth]
+ *     security:
+ *       - bearerAuth: []
+ *     description: |
+ *       This endpoint verifies a user by sending a request to the backend service.
+ *       Include the token in the Authorization header as follows:
+ *       Authorization: Bearer <your_token_here>
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - verificationCode
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: "user@sample.com"
+ *                 description: The email of the user to verify.
+ *               verificationCode:
+ *                 type: string
+ *                 example: "123456"
+ *                 description: The verification code sent to the user.
+ *     responses:
+ *       200:
+ *         description: Verification successful.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Verification successful"
+ *                 data:
+ *                   type: object
+ *                   description: Data returned from the verification service.
+ *       400:
+ *         description: Bad Request || Invalid data provided (e.g., missing required fields).
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Invalid input data"
+ *       401:
+ *         description: Unauthorized || No valid token provided.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Unauthorized access"
+ *       500:
+ *         description: Internal Server Error || An unexpected error occurred.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: "Internal server error"
+ *                 details:
+ *                   type: string
+ *                   example: "Error communicating with the verification service"
+ */
