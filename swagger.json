@@ -1739,6 +1739,133 @@
           }
         }
       }
+    },
+    "/api/reviews/update": {
+      "put": {
+        "summary": "Actualiza una reseña existente",
+        "description": "Permite a un usuario actualizar una reseña de una experiencia, siempre y cuando sea el creador de la reseña.",
+        "tags": [
+          "Reviews"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reviewId": {
+                    "type": "string",
+                    "description": "ID único de la reseña a actualizar",
+                    "example": "63f1f0a12345abcde6789012"
+                  },
+                  "userId": {
+                    "type": "string",
+                    "description": "ID del usuario que intenta realizar la actualización",
+                    "example": "63f1f0b12345abcde6789013"
+                  },
+                  "rating": {
+                    "type": "integer",
+                    "description": "Nueva calificación de la reseña (opcional)",
+                    "example": 4
+                  },
+                  "comment": {
+                    "type": "string",
+                    "description": "Nuevo comentario de la reseña (opcional)",
+                    "example": "Excelente experiencia, muy recomendada."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reseña actualizada con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "description": "Detalles de la reseña actualizada"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error de validación o datos faltantes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "reviewId and userId are required"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "El usuario no tiene permiso para actualizar la reseña",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "You do not have permission to update this review"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Reseña no encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Review not found."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Error updating review."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {},

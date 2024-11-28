@@ -132,14 +132,17 @@ export const uploadReviewSchema = yup.object().shape({
 });
 
 // Update schema for review
-export const updateReviewSchema = uploadReviewSchema.concat(
-    yup.object().shape({
-        experienceId: yup.string().nullable(),
-        rating: yup.number().nullable(),
-        comment: yup.string().nullable(),
-        date: yup.date().nullable(),
-    })
-);
+export const updateReviewSchema = yup.object().shape({
+    reviewId: yup.string().required("El ID de la reseña es obligatorio."),
+    userId: yup.string().required("El ID del usuario es obligatorio."),
+    rating: yup.number()
+      .min(1, "La calificación debe ser al menos 1.")
+      .max(5, "La calificación no puede ser mayor a 5.")
+      .nullable(),
+    comment: yup.string()
+      .max(500, "El comentario no puede superar los 500 caracteres.")
+      .nullable(),
+  });
 
 // Schema for make a booking
 export const bookingSchema = yup.object().shape({

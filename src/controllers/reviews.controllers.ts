@@ -1,6 +1,7 @@
 import { Response, Request, NextFunction } from "express";
 import axios from "axios";
-import { uploadReviewSchema } from "../types/yup-validations";
+import { uploadReviewSchema, updateReviewSchema } from "../types/yup-validations";
+import * as yup from "yup";
 
 const JAVA_BACKEND_URL = process.env.JAVA_BACKEND_URL;
 
@@ -67,4 +68,60 @@ const deleteReview = async (req: Request, res: Response) => {
   }
 }
 
-export { uploadReview, deleteReview }
+const updateReview = async (req: Request, res: Response) => {
+
+  try {
+
+    const validData = await updateReviewSchema.validate(req.body, {
+      abortEarly: false,
+    });
+  
+    const { reviewId, rating, comment, userId } = validData;
+  
+    if (!reviewId || !userId) {
+      return res.status(400).json({ error: "reviewId and userId are required" });
+    }
+
+    // Consulta al backend principal para obtener la reseña
+    const reviewResponse = await axios.get(`${JAVA_BACKEND_URL}/reviews/${reviewId}`);
+    const review = reviewResponse.data;
+
+    if (!review || !review.userId) {
+      return res.status(404).json({ error: "Review not found." });
+    }
+
+    if (review.userId !== userId) {
+      return res.status(403).json({ error: "You do not have permission to update this review" });
+    }
+
+    // Construcción dinámica de los datos a actualizar
+    const updateData: Record<string, any> = {
+      userId: review.userId,
+    };
+    if (rating !== undefined) updateData.rating = rating;
+    if (comment !== undefined) updateData.comment = comment;
+
+    // Actualización de la reseña
+    const updateResponse = await axios.put(`${JAVA_BACKEND_URL}/reviews/${reviewId}`, updateData);
+
+    res.json(updateResponse.data);
+  } catch (error) {
+
+    if (error instanceof yup.ValidationError) {
+      return res.status(400).json({
+        errors: error.errors,
+      });
+    }
+
+    if (axios.isAxiosError(error)) {
+      const status = error.response?.status || 500;
+      const message = error.response?.data?.error || "Internal server error";
+      return res.status(status).json({ error: message });
+    }
+
+    console.error("Error updating review:", error);
+    res.status(500).json({ error: "Error updating review." });
+  }
+}
+
+export { uploadReview, deleteReview, updateReview }
