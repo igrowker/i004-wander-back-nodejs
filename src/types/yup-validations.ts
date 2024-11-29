@@ -23,10 +23,6 @@ export const userRegistrationSchema = yup.object().shape({
         .oneOf(['tourist', 'provider'], 'Invalid role')
         .required('Role is required'),
     
-    preferences: yup.array()
-        .of(yup.string().max(30, 'Each preference cannot exceed 30 characters'))
-        .optional(),
-    
     location: yup.string()
         .optional()
         .max(100, 'Location cannot exceed 100 characters'),
