@@ -34,6 +34,9 @@
  *                 token:
  *                   type: string
  *                   example: "userInfo-token"
+ *                 idUser:
+ *                   type: string
+ *                   example: "64afc392d9e3b0a9e8c92f11"
  *       400:
  *         description: Bad Request || Invalid request parameters
  *       401:
@@ -43,7 +46,6 @@
  *       500:
  *         description: Internal Server Error
  */
-
 // PASSWORD RECOVERY ENDPOINT
 /**
  * @swagger
@@ -186,6 +188,10 @@
  *           schema:
  *             type: object
  *             properties:
+ *               idUser:
+ *                 type: string
+ *                 description: ID of the user whose profile is being updated
+ *                 example: "64afc392d9e3b0a9e8c92f11"
  *               email:
  *                 type: string
  *                 format: email
@@ -837,6 +843,10 @@
  *                 type: string
  *                 example: "experience123"
  *                 description: ID of the experience being reviewed.
+ *               idUser:
+ *                 type: string
+ *                 example: "64afc392d9e3b0a9e8c92f11" // Added userId to request
+ *                 description: ID of the user creating the experience.
  *               rating:
  *                 type: number
  *                 format: float
@@ -1102,6 +1112,17 @@
  *         description: The unique ID of the review to delete.
  *         schema:
  *           type: string
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               idUser:
+ *                 type: string
+ *                 description: ID of the user requesting the deletion.
+ *                 example: "64afc392d9e3b0a9e8c92f11"
  *     responses:
  *       200:
  *         description: Review deleted successfully.
@@ -1161,16 +1182,10 @@
 //VERIFY USER ENDPOINT
 /**
  * @swagger
- * /api/auth/verify:
+ * /api/auth/verify-user:
  *   post:
  *     summary: Verify a user
  *     tags: [UserAuth]
- *     security:
- *       - bearerAuth: []
- *     description: |
- *       This endpoint verifies a user by sending a request to the backend service.
- *       Include the token in the Authorization header as follows:
- *       Authorization: Bearer <your_token_here>
  *     requestBody:
  *       required: true
  *       content:

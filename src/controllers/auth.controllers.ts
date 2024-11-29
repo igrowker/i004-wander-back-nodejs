@@ -5,10 +5,6 @@ import { userRegistrationSchema, updateProfileSchema, userVerification } from ".
 
 const JAVA_BACKEND_URL = process.env.JAVA_BACKEND_URL;
 
-interface CustomRequest extends Request {
-  payload?: any; // Adjust the type as necessary
-}
-
 const login = async (req: Request, res: Response, next: NextFunction) => {
 
     const { email, password } = req.body;
@@ -26,19 +22,23 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     }
 
     try {
-        //Send request to the backend to retrieve the jwt
+        //Send request to the backend to retrieve the jwt and user info
         const response = await axios.post(`${JAVA_BACKEND_URL}/api/autenticacion/login`, {
             email,
             password,
         });
 
         //If successful, store the response
-        const { token } = response.data;
+        const { token, idUser } = response.data;
+
+        // Store userId in the request payload
+        req.payload = { idUser };
 
         //Send the token and and user details
         return res.json({
             message: "Log in successful",
             token,
+            idUser
         });
 
     } catch (error: any) {
@@ -84,15 +84,15 @@ const logout = async (req: Request, res: Response) => {
 };
 
 const getProfile = async (req: Request, res: Response, next: NextFunction) => {
-
-    const id = req.params.id;
+    // Access userId from the request payload
+    const idUser = req.payload.userId; // Assuming userId is stored in the payload after authentication
 
     try {
-        // Send a request to the backend to retrieve the user's profile
-        const response = await axios.get(`${JAVA_BACKEND_URL}/api/users/profile/${id}`);
+        // Send a request to the backend to retrieve the user's profile using userId
+        const response = await axios.get(`${JAVA_BACKEND_URL}/api/users/profile/${idUser}`);
 
         // Extract the user profile data from the response
-        const profile = response.data
+        const profile = response.data;
 
         return res.status(200).json({
             message: "Retrieved user data successfully.",
@@ -115,8 +115,7 @@ const getProfile = async (req: Request, res: Response, next: NextFunction) => {
 
         return res.status(500).json({ message: "Internal server error" });
     }
-
-}
+};
 
 const updateProfile = async (req: Request, res: Response, next: NextFunction) => {
     
@@ -129,8 +128,10 @@ const updateProfile = async (req: Request, res: Response, next: NextFunction) =>
     }
 
     try {
-        // Send the updated data to the backend
-        const response = await axios.put(`${JAVA_BACKEND_URL}/api/users/profile/`, validData);
+        const userId = req.payload.idUser; // Access userId from the request payload
+
+        // Send the updated data to the backend, including userId
+        const response = await axios.put(`${JAVA_BACKEND_URL}/api/users/profile/${userId}`, validData);
 
         // If successful, return the updated profile data
         const updatedProfile = response.data;
@@ -158,7 +159,7 @@ const updateProfile = async (req: Request, res: Response, next: NextFunction) =>
 
         return res.status(500).json({ message: "Internal server error" });
     }
-}
+};
 
 const register = async (req: Request, res: Response) => {
 
@@ -237,7 +238,7 @@ const verificationCode = async (req: Request, res: Response) => {
     }
 };
 
-const verify = (req: CustomRequest, res: Response, next: NextFunction) => {
+const verify = (req: Request, res: Response, next: NextFunction) => {
 
     if (req.authError && req.authError.name === "Unauthorized") {
         return res.status(401).json({ message: "JWT expired" });

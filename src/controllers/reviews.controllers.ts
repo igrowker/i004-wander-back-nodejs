@@ -12,7 +12,12 @@ const uploadReview = async (req: Request, res: Response) => {
   });
 
   try {
-    const response = await axios.post(`${JAVA_BACKEND_URL}/reviews`, validData);
+    const idUser = req.payload.idUser
+
+    const response = await axios.post(`${JAVA_BACKEND_URL}/reviews`, {
+      ...validData,
+      idUser
+    });
 
     const { review } = response.data
 

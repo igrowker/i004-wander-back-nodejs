@@ -67,8 +67,12 @@ const uploadExperience = async (req: Request, res: Response) => {
   });
 
   try {
+    const idUser = req.payload.idUser;
 
-    const response = await axios.post(`${JAVA_BACKEND_URL}/experiences`, validData);
+    const response = await axios.post(`${JAVA_BACKEND_URL}/experiences`, {
+      ...validData,
+      idUser
+    });
 
     const { experience } = response.data;
 
@@ -108,10 +112,15 @@ const updateExperience = async (req: Request, res: Response) => {
   }
 
   try {
+    const idUser = req.payload.idUser
 
-    const response = await axios.put(`${JAVA_BACKEND_URL}/experiences/${id}`, validData);
+    const response = await axios.put(`${JAVA_BACKEND_URL}/experiences/${id}`, {
+      ...validData,
+      idUser
+    });
 
     const updatedExperience = response.data;
+    
     return res.status(200).json({
       message: "Experience updated successfully",
       updatedExperience
