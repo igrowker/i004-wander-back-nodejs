@@ -845,7 +845,7 @@
  *                 description: ID of the experience being reviewed.
  *               idUser:
  *                 type: string
- *                 example: "64afc392d9e3b0a9e8c92f11" // Added userId to request
+ *                 example: "64afc392d9e3b0a9e8c92f11"
  *                 description: ID of the user creating the experience.
  *               rating:
  *                 type: number
