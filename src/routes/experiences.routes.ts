@@ -5,7 +5,7 @@ import { isAuthenticated } from "../middlewares/verifyToken.middleware";
 
 router.get('/get-all', getExperiences);
 router.get('/:id', getExperienceById);
-router.post('/create', isAuthenticated, uploadExperience)
-router.put('/:id', isAuthenticated, updateExperience)
+router.post('/create', uploadExperience)
+router.put('/:id', updateExperience)
 
 export default router;
