@@ -7,16 +7,17 @@ const JAVA_BACKEND_URL = process.env.JAVA_BACKEND_URL;
 
 const uploadReview = async (req: Request, res: Response) => {
 
+  const token = req.headers.authorization?.split(" ")[1];
   const validData = await uploadReviewSchema.validate(req.body, {
     abortEarly: false,
   });
 
   try {
-    const idUser = req.payload.idUser
 
     const response = await axios.post(`${JAVA_BACKEND_URL}/reviews`, {
-      ...validData,
-      idUser
+      ...validData
+    }, {
+      headers: { Authorization: `Bearer ${token}` }
     });
 
     const { review } = response.data
@@ -47,9 +48,12 @@ const uploadReview = async (req: Request, res: Response) => {
 const deleteReview = async (req: Request, res: Response) => {
 
   const id = req.params.id;
+  const token = req.headers.authorization?.split(" ")[1];
 
   try {
-    const response = await axios.delete(`${JAVA_BACKEND_URL}/reviews/${id}`)
+    const response = await axios.delete(`${JAVA_BACKEND_URL}/reviews/${id}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
 
     return res.status(200).json({
       message: "Review deleted successfully.",
@@ -75,6 +79,8 @@ const deleteReview = async (req: Request, res: Response) => {
 
 const updateReview = async (req: Request, res: Response) => {
 
+  const token = req.headers.authorization?.split(" ")[1];
+
   try {
 
     const validData = await updateReviewSchema.validate(req.body, {
@@ -83,10 +89,12 @@ const updateReview = async (req: Request, res: Response) => {
   
     const { reviewId, rating, comment, userId } = validData;
   
+    //Esta validación se debe de hacer en el yup
     if (!reviewId || !userId) {
       return res.status(400).json({ error: "reviewId and userId are required" });
     }
 
+    // Ya nos viene la info de la reseña desde el front!
     // Consulta al backend principal para obtener la reseña
     const reviewResponse = await axios.get(`${JAVA_BACKEND_URL}/reviews/${reviewId}`);
     const review = reviewResponse.data;
@@ -107,7 +115,9 @@ const updateReview = async (req: Request, res: Response) => {
     if (comment !== undefined) updateData.comment = comment;
 
     // Actualización de la reseña
-    const updateResponse = await axios.put(`${JAVA_BACKEND_URL}/reviews/${reviewId}`, updateData);
+    const updateResponse = await axios.put(`${JAVA_BACKEND_URL}/reviews/${reviewId}`, updateData, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
 
     res.json(updateResponse.data);
   } catch (error) {

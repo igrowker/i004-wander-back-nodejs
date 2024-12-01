@@ -1,11 +1,11 @@
-import { Response, Request, NextFunction } from "express";
+import { Response, Request} from "express";
 import axios from "axios";
 import * as yup from "yup";
 import { userRegistrationSchema, updateProfileSchema, userVerification } from "../types/yup-validations";
 
 const JAVA_BACKEND_URL = process.env.JAVA_BACKEND_URL;
 
-const login = async (req: Request, res: Response, next: NextFunction) => {
+const login = async (req: Request, res: Response) => {
 
     const { email, password } = req.body;
 
@@ -29,16 +29,13 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
         });
 
         //If successful, store the response
-        const { token, idUser } = response.data;
-
-        // Store userId in the request payload
-        req.payload = { idUser };
+        const { token, user } = response.data;
 
         //Send the token and and user details
         return res.json({
             message: "Log in successful",
             token,
-            idUser
+            user
         });
 
     } catch (error: any) {
@@ -60,9 +57,12 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 const logout = async (req: Request, res: Response) => {
+    const token = req.headers.authorization?.split(" ")[1];
 
     try {
-        const response = await axios.post(`${JAVA_BACKEND_URL}/api/autenticacion/logout`, null);
+        const response = await axios.post(`${JAVA_BACKEND_URL}/api/autenticacion/logout`, null, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
         
         // Optionally check the response from the backend
         if (response.status === 200) {
@@ -83,42 +83,42 @@ const logout = async (req: Request, res: Response) => {
     }
 };
 
-const getProfile = async (req: Request, res: Response, next: NextFunction) => {
-    // Access userId from the request payload
-    const idUser = req.payload.userId; // Assuming userId is stored in the payload after authentication
+// const getProfile = async (req: Request, res: Response, next: NextFunction) => {
+//     const userId = req.params.userId;
 
-    try {
-        // Send a request to the backend to retrieve the user's profile using userId
-        const response = await axios.get(`${JAVA_BACKEND_URL}/api/users/profile/${idUser}`);
+//     try {
+//         // Send a request to the backend to retrieve the user's profile using userId
+//         const response = await axios.get(`${JAVA_BACKEND_URL}/api/users/profile/${userId}`);
 
-        // Extract the user profile data from the response
-        const profile = response.data;
+//         // Extract the user profile data from the response
+//         const profile = response.data;
 
-        return res.status(200).json({
-            message: "Retrieved user data successfully.",
-            profile
-        });
+//         return res.status(200).json({
+//             message: "Retrieved user data successfully.",
+//             profile
+//         });
 
-    } catch (error: any) {
-        console.error("Error retrieving profile:", error);
+//     } catch (error: any) {
+//         console.error("Error retrieving profile:", error);
 
-        if (error.response) {
-            switch (error.response.status) {
-                case 401:
-                    return res.status(401).json({ message: "Unauthorized access" });
-                case 404:
-                    return res.status(404).json({ message: "Profile not found" });
-                default:
-                    return res.status(500).json({ message: "Internal server error" });
-            }
-        }
+//         if (error.response) {
+//             switch (error.response.status) {
+//                 case 401:
+//                     return res.status(401).json({ message: "Unauthorized access" });
+//                 case 404:
+//                     return res.status(404).json({ message: "Profile not found" });
+//                 default:
+//                     return res.status(500).json({ message: "Internal server error" });
+//             }
+//         }
 
-        return res.status(500).json({ message: "Internal server error" });
-    }
-};
+//         return res.status(500).json({ message: "Internal server error" });
+//     }
+// };
 
-const updateProfile = async (req: Request, res: Response, next: NextFunction) => {
+const updateProfile = async (req: Request, res: Response) => {
     
+    const token = req.headers.authorization?.split(" ")[1];
     const validData = await updateProfileSchema.validate(req.body, {
         abortEarly: false,
     });
@@ -128,10 +128,12 @@ const updateProfile = async (req: Request, res: Response, next: NextFunction) =>
     }
 
     try {
-        const userId = req.payload.idUser; // Access userId from the request payload
+        const userId = req.params.userId;
 
         // Send the updated data to the backend, including userId
-        const response = await axios.put(`${JAVA_BACKEND_URL}/api/users/profile/${userId}`, validData);
+        const response = await axios.put(`${JAVA_BACKEND_URL}/api/users/profile/${userId}`, validData, {
+            headers: { Authorization: `Bearer ${token}` }
+        });
 
         // If successful, return the updated profile data
         const updatedProfile = response.data;
@@ -238,7 +240,7 @@ const verificationCode = async (req: Request, res: Response) => {
     }
 };
 
-const verify = (req: Request, res: Response, next: NextFunction) => {
+const verify = (req: Request, res: Response) => {
 
     if (req.authError && req.authError.name === "Unauthorized") {
         return res.status(401).json({ message: "JWT expired" });
@@ -247,4 +249,4 @@ const verify = (req: Request, res: Response, next: NextFunction) => {
     return res.status(200).json(req.payload);
 };
 
-export { register, login, verify, logout, getProfile, updateProfile, verificationCode };
+export { register, login, verify, logout, updateProfile, verificationCode };

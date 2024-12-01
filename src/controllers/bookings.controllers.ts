@@ -1,4 +1,4 @@
-import { Response, NextFunction, Request } from "express";
+import { Response, Request } from "express";
 import axios from "axios";
 import { bookingSchema } from "../types/yup-validations";
 import * as yup from "yup";
@@ -11,7 +11,7 @@ const getBookingsById = async (req: Request, res: Response) => {
 
     try {
         const response = await axios.get(`${JAVA_BACKEND_URL}/bookings/${id}`, {
-            headers: { Authorization: token },
+            headers: { Authorization: `Bearer ${token}` },
         });
         res.json(response.data);
     } catch (error) {
@@ -20,6 +20,7 @@ const getBookingsById = async (req: Request, res: Response) => {
     }
 }
 
+//usar axios
 const makeBookings = async (req: Request, res: Response) => {
     try {
         const validatedData = await bookingSchema.validate(req.body);
@@ -49,5 +50,7 @@ const makeBookings = async (req: Request, res: Response) => {
           }
     }
   }
+
+  //GET bookings/experience/{experienceId}
 
 export { getBookingsById, makeBookings };

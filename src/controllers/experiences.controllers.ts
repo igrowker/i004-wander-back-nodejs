@@ -62,16 +62,17 @@ const getExperienceById = async (req: Request, res: Response) => {
 
 const uploadExperience = async (req: Request, res: Response) => {
 
+  const token = req.headers.authorization?.split(" ")[1];
   const validData = await uploadExperienceSchema.validate(req.body, {
     abortEarly: false,
   });
 
   try {
-    const idUser = req.payload.idUser;
 
     const response = await axios.post(`${JAVA_BACKEND_URL}/experiences`, {
-      ...validData,
-      idUser
+      ...validData
+    }, {
+      headers: { Authorization: `Bearer ${token}` }
     });
 
     const { experience } = response.data;
@@ -102,7 +103,7 @@ const uploadExperience = async (req: Request, res: Response) => {
 const updateExperience = async (req: Request, res: Response) => {
 
   const id = req.params.id;
-
+  const token = req.headers.authorization?.split(" ")[1];
   const validData = await updateExperienceSchema.validate(req.body, {
     abortEarly: false,
   });
@@ -112,11 +113,11 @@ const updateExperience = async (req: Request, res: Response) => {
   }
 
   try {
-    const idUser = req.payload.idUser
 
     const response = await axios.put(`${JAVA_BACKEND_URL}/experiences/${id}`, {
-      ...validData,
-      idUser
+      ...validData
+    }, {
+      headers: { Authorization: `Bearer ${token}` }
     });
 
     const updatedExperience = response.data;

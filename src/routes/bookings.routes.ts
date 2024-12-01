@@ -3,7 +3,7 @@ const router = express.Router();
 import { getBookingsById, makeBookings } from "../controllers/bookings.controllers";
 import { isAuthenticated } from "../middlewares/verifyToken.middleware";
 
-router.get('/:id', isAuthenticated, getBookingsById);
-router.post('/create', isAuthenticated, makeBookings);
+router.get('/:id', getBookingsById);
+router.post('/create', makeBookings);
 
 export default router;

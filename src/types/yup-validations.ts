@@ -120,11 +120,8 @@ export const uploadReviewSchema = yup.object().shape({
     comment: yup.string()
         .required("Comment is required")
         .min(10, "Comment must be at least 10 characters long")
-        .max(500, "Comment cannot exceed 500 characters"),
-    
-    date: yup.date()
-        .required("Date is required")
-        .nullable() // Allow date to be nullable if needed?????
+        .max(500, "Comment cannot exceed 500 characters")
+        
 });
 
 // Update schema for review
