@@ -85,6 +85,8 @@
  *         description: Internal Server Error
  */
 
+import { create } from "domain"
+
 // LOGOUT USER
 /**
  * @swagger
@@ -1366,7 +1368,30 @@
  *             schema:
  *               type: array
  *               items:
- *                 $ref: '#/components/schemas/Review'
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     example: "63f1f0a12345abcde6789012"
+ *                   userId:
+ *                     type: string
+ *                     example: "63f1f0b12345abcde6789013"
+ *                   rating:
+ *                     type: integer
+ *                     example: 4
+ *                   comment:
+ *                     type: string
+ *                     example: "Excelente experiencia, muy recomendada."
+ *                   createdAt:
+ *                     type: string
+ *                     format: date-time
+ *                     example: "2023-08-01T10:00:00Z"
+ *                 required:
+ *                   - id
+ *                   - userId
+ *                   - rating
+ *                   - comment
+ *                   - createdAt
  *       404:
  *         description: Experiencia no encontrada
  *         content:
@@ -1388,3 +1413,4 @@
  *                   type: string
  *                   example: "Error getting reviews."
  */
+
