@@ -1,2 +1,21 @@
-#init
+name: Pipeline CICD para el despliegue del  servicio de back de node
 
+on:
+  push:
+    branches:
+      - develop # Solo se activa con un push a la rama develop
+
+env:
+  DOCKER_IMAGE_NAME: your-dockerhub-username/your-app-name
+
+jobs:
+  build-and-push-docker:
+    name: Build and Push Docker Image
+    runs-on: ubuntu:22.04
+    environment:
+      name: devops # Asocia el entorno devops
+
+    steps:
+      - name: echo to devops variables
+        run: |
+          echo ${{ env.HUBB_USER}}
