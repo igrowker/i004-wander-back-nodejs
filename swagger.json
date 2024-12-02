@@ -1891,6 +1891,73 @@
           }
         }
       }
+    },
+    "/api/reviews/experience/{experienceId}": {
+      "get": {
+        "summary": "Obtiene las reseñas de una experiencia",
+        "description": "Permite obtener las reseñas de una experiencia específica.",
+        "tags": [
+          "Reviews"
+        ],
+        "parameters": [
+          {
+            "name": "experienceId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "63f1f0a12345abcde6789012"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Reseñas obtenidas con éxito",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Review"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Experiencia no encontrada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Experience not found."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Error interno del servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Error getting reviews."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {},

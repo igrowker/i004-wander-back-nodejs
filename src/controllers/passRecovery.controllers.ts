@@ -1,6 +1,6 @@
 import { Response, NextFunction, Request } from 'express'
 import axios from 'axios';
-import { passwordChangeSchema } from '@/types/yup-validations';
+import { passwordChangeSchema } from '../types/yup-validations';
 
 const JAVA_BACKEND_URL = process.env.JAVA_BACKEND_URL;
 
