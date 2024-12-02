@@ -4,7 +4,8 @@ export const userRegistrationSchema = yup.object().shape({
     name: yup.string()
         .required('Name is required')
         .min(2, 'Name must be at least 2 characters long')
-        .max(50, 'Name cannot exceed 50 characters'),
+        .max(50, 'Name cannot exceed 50 characters')
+        .matches(/^[A-Za-z\s]+$/, 'Name can only contain letters and spaces'),
     
     email: yup.string()
         .email('Invalid email address')
