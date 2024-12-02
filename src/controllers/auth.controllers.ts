@@ -64,7 +64,6 @@ const logout = async (req: Request, res: Response) => {
             headers: { Authorization: `Bearer ${token}` }
         });
         
-        // Optionally check the response from the backend
         if (response.status === 200) {
             return res.status(200).json({ message: "Sesión cerrada exitosamente" });
         } else {
@@ -74,7 +73,6 @@ const logout = async (req: Request, res: Response) => {
     } catch (error) {
         console.error("Error durante el logout:", error);
         
-        // More specific error handling
         if (axios.isAxiosError(error) && error.response) {
             return res.status(error.response.status).json({ error: "Hubo un problema al cerrar la sesión" });
         }
@@ -83,6 +81,7 @@ const logout = async (req: Request, res: Response) => {
     }
 };
 
+//Maybe not needed?
 // const getProfile = async (req: Request, res: Response, next: NextFunction) => {
 //     const userId = req.params.userId;
 
@@ -116,6 +115,8 @@ const logout = async (req: Request, res: Response) => {
 //     }
 // };
 
+
+//TO REVIEW
 const updateProfile = async (req: Request, res: Response) => {
     
     const token = req.headers.authorization?.split(" ")[1];
@@ -216,9 +217,7 @@ const verificationCode = async (req: Request, res: Response) => {
         
         // Send a request to the backend to verify the user
         const response = await axios.post(
-            `${JAVA_BACKEND_URL}/api/autenticacion/verify-user`,
-            validData // Assuming you want to send the request body
-        );
+            `${JAVA_BACKEND_URL}/api/autenticacion/verify-user`, validData);
 
         // Return the response from the backend
         return res.status(200).json({
@@ -239,6 +238,10 @@ const verificationCode = async (req: Request, res: Response) => {
         return res.status(500).json({ message: "Internal server error" });
     }
 };
+
+const resendVerificationCode = async (req: Request, res: Response) => {
+    
+}
 
 const verify = (req: Request, res: Response) => {
 
