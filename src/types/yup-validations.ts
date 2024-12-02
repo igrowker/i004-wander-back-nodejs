@@ -4,7 +4,8 @@ export const userRegistrationSchema = yup.object().shape({
     name: yup.string()
         .required('Name is required')
         .min(2, 'Name must be at least 2 characters long')
-        .max(50, 'Name cannot exceed 50 characters'),
+        .max(50, 'Name cannot exceed 50 characters')
+        .matches(/^[A-Za-z\s]+$/, 'Name can only contain letters and spaces'),
     
     email: yup.string()
         .email('Invalid email address')
@@ -70,9 +71,11 @@ export const uploadExperienceSchema = yup.object().shape({
         .required("The description is required")
         .min(10, "The description must be at least 10 characters long"),
     
-    location: yup.string()
-        .required("The location is required")
-        .min(3, "The location must be at least 3 characters long"),
+    location: yup.array()
+        .of(yup.string()
+            .min(2, "Each field must be at least 3 characters long"))
+            .max(25, "Each field cannot exceed 25 characters")
+        .required("The location is required"),
     
     price: yup.number()
         .required("The price is required")
@@ -120,7 +123,9 @@ export const uploadReviewSchema = yup.object().shape({
     comment: yup.string()
         .required("Comment is required")
         .min(10, "Comment must be at least 10 characters long")
-        .max(500, "Comment cannot exceed 500 characters")
+        .max(500, "Comment cannot exceed 500 characters"),
+
+    userId: yup.string().required("El ID del usuario es obligatorio."),
         
 });
 
@@ -157,3 +162,15 @@ export const userVerification = yup.object().shape({
         .matches(/^\d{6}$/, 'Verification code must be exactly 6 digits')
         .required('Verification code is required'),
 });
+
+export const passwordChangeSchema = yup.object().shape({
+    password: yup.string()
+        .required('Password is required')
+        .min(8, 'Password must be at least 8 characters long')
+        .max(12, 'Password cannot exceed 12 characters')
+        .matches(
+            /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#!]).{8,12}$/,
+            'Password must contain at least one uppercase letter, one lowercase letter, one number, and one symbol (@#!)'
+        ),
+
+})
