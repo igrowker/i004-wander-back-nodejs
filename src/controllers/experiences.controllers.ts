@@ -60,6 +60,135 @@ const getExperienceById = async (req: Request, res: Response) => {
   }
 }
 
+const getTopRatedExperiences = async (req: Request, res: Response) => {
+  const filters = req.query;
+
+  try {
+    const response = await axios.get(`${JAVA_BACKEND_URL}/top-rated`, { params: filters });
+    const topRatedExperiences = response.data
+
+    if (!topRatedExperiences || topRatedExperiences.length === 0) {
+      return res.status(404).json({ message: 'No top-rated experiences found' });
+    }
+
+    return res.json(topRatedExperiences)
+
+  } catch (error) {
+    console.error(error);
+      if (axios.isAxiosError(error) && error.response) {
+          switch (error.response.status) {
+              case 400:
+                  return res.status(400).json({ message: "Bad request. Please check your parameters." });
+              case 404:
+                  return res.status(404).json({ message: "Not found. Please check the URL." });
+              case 500:
+                  return res.status(500).json({ message: "Internal server error." });
+              default:
+                  return res.status(500).json({ message: "An unexpected error occurred." });
+          }
+      }
+      return res.status(500).json({ message: 'Error to get top-rated experiences', error: (error as Error).message });
+  }
+};
+
+const getMostBookedExperiences = async (req: Request, res: Response) => {
+  const filters = req.query;
+
+  try {
+    const response = await axios.get(`${JAVA_BACKEND_URL}/most-reserved`, { params: filters });
+    const mostBooked = response.data
+
+    if (!mostBooked || mostBooked.length === 0) {
+      return res.status(404).json({ message: 'No most-booked experiences found' });
+    }
+
+    return res.json(mostBooked)
+
+  } catch (error) {
+    console.error(error);
+      if (axios.isAxiosError(error) && error.response) {
+          switch (error.response.status) {
+              case 400:
+                  return res.status(400).json({ message: "Bad request. Please check your parameters." });
+              case 404:
+                  return res.status(404).json({ message: "Not found. Please check the URL." });
+              case 500:
+                  return res.status(500).json({ message: "Internal server error." });
+              default:
+                  return res.status(500).json({ message: "An unexpected error occurred." });
+          }
+      }
+      return res.status(500).json({ message: 'Error to get most-booked experiences', error: (error as Error).message });
+  }
+};
+
+const getLatestExperiences = async (req: Request, res: Response) => {
+  const filters = req.query;
+
+  try {
+    const response = await axios.get(`${JAVA_BACKEND_URL}/latest`, { params: filters });
+    const latestExperiences = response.data
+
+    if (!latestExperiences || latestExperiences.length === 0) {
+      return res.status(404).json({ message: 'Latest experiences not found' });
+    }
+
+    return res.json(latestExperiences)
+
+  } catch (error) {
+    console.error(error);
+      if (axios.isAxiosError(error) && error.response) {
+          switch (error.response.status) {
+              case 400:
+                  return res.status(400).json({ message: "Bad request. Please check your parameters." });
+              case 404:
+                  return res.status(404).json({ message: "Not found. Please check the URL." });
+              case 500:
+                  return res.status(500).json({ message: "Internal server error." });
+              default:
+                  return res.status(500).json({ message: "An unexpected error occurred." });
+          }
+      }
+      return res.status(500).json({ message: 'Error to get latest experiences', error: (error as Error).message });
+  }
+};
+
+const getExperiencesByHost = async (req: Request, res: Response) => {
+  const filters = req.query;
+  const { id } = req.params
+
+  if(!id) {
+    return res.status(400).json({ message: "Error: ID parameter is required." })
+  }
+
+  try {
+    const response = await axios.get(`${JAVA_BACKEND_URL}/experiences/host/${id}`, { params: filters });
+    const hostExperiences = response.data
+
+    if (!hostExperiences || hostExperiences.length === 0) {
+      return res.status(404).json({ message: 'No experiences found from provided host' });
+    }
+
+    return res.json(hostExperiences)
+
+  } catch (error) {
+    console.error(error);
+      if (axios.isAxiosError(error) && error.response) {
+          switch (error.response.status) {
+              case 400:
+                  return res.status(400).json({ message: "Bad request. Please check your parameters." });
+              case 404:
+                  return res.status(404).json({ message: "Not found. Please check the URL." });
+              case 500:
+                  return res.status(500).json({ message: "Internal server error." });
+              default:
+                  return res.status(500).json({ message: "An unexpected error occurred." });
+          }
+      }
+      return res.status(500).json({ message: 'Error to get experiences from host', error: (error as Error).message });
+  }
+};
+
 const uploadExperience = async (req: Request, res: Response) => {
 
   const token = req.headers.authorization?.split(" ")[1];
@@ -102,7 +231,7 @@ const uploadExperience = async (req: Request, res: Response) => {
 
 const updateExperience = async (req: Request, res: Response) => {
 
-  const id = req.params.id;
+  const { id } = req.params;
   const token = req.headers.authorization?.split(" ")[1];
   const validData = await updateExperienceSchema.validate(req.body, {
     abortEarly: false,
@@ -147,4 +276,67 @@ const updateExperience = async (req: Request, res: Response) => {
   }
 };
 
-export { getExperiences, getExperienceById, uploadExperience, updateExperience };
+const getTags = async (req: Request, res: Response) => {
+
+  try {
+    const response = await axios.get(`${JAVA_BACKEND_URL}/experiences/tags`);
+    const tags = response.data;
+
+    if (!tags || tags.length === 0) {
+      return res.status(404).json({ message: 'No tags found' });
+    }
+
+    return res.json(tags)
+  } catch (error) {
+    console.error(error);
+      if (axios.isAxiosError(error) && error.response) {
+          switch (error.response.status) {
+              case 400:
+                  return res.status(400).json({ message: "Bad request. Please check your parameters." });
+              case 404:
+                  return res.status(404).json({ message: "Not found. Please check the URL." });
+              case 500:
+                  return res.status(500).json({ message: "Internal server error." });
+              default:
+                  return res.status(500).json({ message: "An unexpected error occurred." });
+          }
+      }
+      return res.status(500).json({ message: 'Error to get tags', error: (error as Error).message });
+  }
+};
+
+const getExperiencesByTag = async (req: Request, res: Response) => {
+
+  const { tag } = req.params;
+
+  try {
+
+    if (!tag) {
+      return res.status(400).json({ message: "Error: ID parameter is required." });
+    }
+    const response = await axios.get(`${JAVA_BACKEND_URL}/experiences/tags/${tag}`);
+    const experiencesByTag = response.data;
+
+    if (!experiencesByTag || experiencesByTag.length === 0) {
+      return res.status(404).json({ message: 'No experiences found with provided tag' });
+    }
+    return res.json(experiencesByTag);
+  } catch (error) {
+    console.error(error);
+    if (axios.isAxiosError(error) && error.response) {
+        switch (error.response.status) {
+            case 400:
+                return res.status(400).json({ message: "Bad request. Please check your parameters." });
+            case 404:
+                return res.status(404).json({ message: "Not found. Please check the URL." });
+            case 500:
+                return res.status(500).json({ message: "Internal server error." });
+            default:
+                return res.status(500).json({ message: "An unexpected error occurred." });
+        }
+    }
+    return res.status(500).json({ message: 'Error to get experiences by tag', error: (error as Error).message });
+  }
+};
+
+export { getExperiences, getExperienceById, uploadExperience, updateExperience, getTopRatedExperiences, getMostBookedExperiences, getLatestExperiences, getExperiencesByHost, getTags, getExperiencesByTag };
