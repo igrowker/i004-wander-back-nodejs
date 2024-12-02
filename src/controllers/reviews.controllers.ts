@@ -139,4 +139,21 @@ const updateReview = async (req: Request, res: Response) => {
   }
 }
 
-export { uploadReview, deleteReview, updateReview }
+const getReviewsByExperienceId = async (req: Request, res: Response) => {
+  const experienceId = req.params.experienceId;
+  const token = req.headers.authorization?.split(" ")[1];
+
+  try {
+    const response = await axios.get(`${JAVA_BACKEND_URL}/reviews/experience/${experienceId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    const reviews = response.data;
+    res.json(reviews);
+  } catch (error) {
+    console.error("Error getting reviews:", error);
+    res.status(500).json({ error: "Error getting reviews" });
+  }
+};
+
+export { uploadReview, deleteReview, updateReview, getReviewsByExperienceId }

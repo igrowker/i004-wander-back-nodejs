@@ -22,34 +22,31 @@ const getBookingsById = async (req: Request, res: Response) => {
 
 //usar axios
 const makeBookings = async (req: Request, res: Response) => {
-    try {
-        const validatedData = await bookingSchema.validate(req.body);
+  try {
+    const validatedData = await bookingSchema.validate(req.body);
 
-      const response = await fetch(`${JAVA_BACKEND_URL}/bookings`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(validatedData),
-      });
-  
-      
-      if (response.ok) {
-        const reserva = await response.json();
-        res.status(201).json({ message: 'Booking confirmed', reserva });
-      } else {
-        res.status(400).json({ message: 'Booking rejected' });
-      }
-    } catch (error) {
-        if (error instanceof yup.ValidationError) {
-            // Error de validación de datos
-            res.status(400).json({ message: 'Validation error', errors: error.errors });
-          } else {
-            console.error(error);
-            res.status(500).json({ message: 'Error processing the request' });
-          }
+    const response = await axios.post(`${JAVA_BACKEND_URL}/bookings`, validatedData, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.status === 201) {
+      const reserva = response.data;
+      res.status(201).json({ message: 'Booking confirmed', reserva });
+    } else {
+      res.status(400).json({ message: 'Booking rejected' });
+    }
+  } catch (error) {
+    if (error instanceof yup.ValidationError) {
+      // Error de validación de datos
+      res.status(400).json({ message: 'Validation error', errors: error.errors });
+    } else {
+      console.error(error);
+      res.status(500).json({ message: 'Error processing the request' });
     }
   }
+}
 
   //GET bookings/experience/{experienceId}
 
