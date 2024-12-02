@@ -20,7 +20,7 @@ const getBookingsById = async (req: Request, res: Response) => {
     }
 }
 
-//usar axios
+//Añadir token en headers
 const makeBookings = async (req: Request, res: Response) => {
   try {
     const validatedData = await bookingSchema.validate(req.body);
@@ -49,5 +49,6 @@ const makeBookings = async (req: Request, res: Response) => {
 }
 
   //GET bookings/experience/{experienceId}
+  //GET bookings/user/{userId}
 
 export { getBookingsById, makeBookings };

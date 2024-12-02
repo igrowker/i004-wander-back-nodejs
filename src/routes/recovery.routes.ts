@@ -1,9 +1,8 @@
 import express from "express";
 const router = express.Router();
-import { recoverPassword, verifyPasswordRecovery, createNewPassword } from "../controllers/passRecovery.controllers";
+import { recoverPassword, createNewPassword } from "../controllers/passRecovery.controllers";
 
-router.post("/recover-password", recoverPassword)
-router.post('/verify-recovery', verifyPasswordRecovery)
-router.post('/create-new', createNewPassword)
+router.post("/forgot-password", recoverPassword)
+router.post('/reset-password', createNewPassword)
 
 export default router;

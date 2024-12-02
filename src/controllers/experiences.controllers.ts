@@ -1,4 +1,4 @@
-import { Response, Request, NextFunction } from "express";
+import { Response, Request } from "express";
 import axios from "axios";
 import { uploadExperienceSchema, updateExperienceSchema } from "../types/yup-validations";
 
@@ -9,7 +9,7 @@ const getExperiences = async (req: Request, res: Response) => {
   const filters = req.query;
 
   try {
-    const response = await axios.get(JAVA_BACKEND_URL + '/experiences', { params: filters });
+    const response = await axios.get(`${JAVA_BACKEND_URL}/experiences`, { params: filters });
     const experiences = response.data;
 
     if (!experiences || experiences.length === 0) {
@@ -27,7 +27,7 @@ const getExperiences = async (req: Request, res: Response) => {
               case 404:
                   return res.status(404).json({ message: "Not found. Please check the URL." });
               case 500:
-                  return res.status(500).json({ message: "Internal server error." });
+                  return res.status(500).json({ message: "Internal server error. :(" });
               default:
                   return res.status(500).json({ message: "An unexpected error occurred." });
           }
@@ -64,7 +64,7 @@ const getTopRatedExperiences = async (req: Request, res: Response) => {
   const filters = req.query;
 
   try {
-    const response = await axios.get(`${JAVA_BACKEND_URL}/top-rated`, { params: filters });
+    const response = await axios.get(`${JAVA_BACKEND_URL}/experiences/top-rated`, { params: filters });
     const topRatedExperiences = response.data
 
     if (!topRatedExperiences || topRatedExperiences.length === 0) {
@@ -95,7 +95,7 @@ const getMostBookedExperiences = async (req: Request, res: Response) => {
   const filters = req.query;
 
   try {
-    const response = await axios.get(`${JAVA_BACKEND_URL}/most-reserved`, { params: filters });
+    const response = await axios.get(`${JAVA_BACKEND_URL}/experiences/most-reserved`, { params: filters });
     const mostBooked = response.data
 
     if (!mostBooked || mostBooked.length === 0) {
@@ -126,7 +126,7 @@ const getLatestExperiences = async (req: Request, res: Response) => {
   const filters = req.query;
 
   try {
-    const response = await axios.get(`${JAVA_BACKEND_URL}/latest`, { params: filters });
+    const response = await axios.get(`${JAVA_BACKEND_URL}/experiences/latest`, { params: filters });
     const latestExperiences = response.data
 
     if (!latestExperiences || latestExperiences.length === 0) {
