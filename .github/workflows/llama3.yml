@@ -2,10 +2,9 @@ name: Test Echo Action
 on:
   push:
     branches:
-      - devops
-  pull_request:
-    branches:
-      - devops
+      - develop
+  workflow_dispatch:
+
 jobs:
   echo-job:
     runs-on: ubuntu-latest
