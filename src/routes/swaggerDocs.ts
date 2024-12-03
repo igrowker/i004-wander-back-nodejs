@@ -2072,7 +2072,7 @@
 // GET BOOKINGS BY USER ENDPOINT
 /**
  * @swagger
- * /bookings/user/{userId}:
+ * api/bookings/user/{userId}:
  *   get:
  *     summary: Obtiene las bookings de un usuario por su ID
  *     description: Realiza una petición a la API de Java para obtener las bookings del usuario con el ID proporcionado
@@ -2103,7 +2103,7 @@
 // GET BOOKINGS BY EXPERIENCE ENDPOINT
 /**
  * @swagger
- * /bookings/experience/{experienceId}:
+ * api/bookings/experience/{experienceId}:
  *   get:
  *     summary: Obtiene las bookings de una experiencia por su ID
  *     description: Realiza una petición a la API de Java para obtener las bookings de la experiencia con el ID proporcionado
