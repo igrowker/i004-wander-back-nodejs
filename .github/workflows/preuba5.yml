@@ -1,0 +1,14 @@
+name: JOSE
+
+on:
+  push:
+    branches:
+      - develop  # Se activa automáticamente en esta rama
+  workflow_dispatch:  # Permite ejecutarlo manualmente
+
+jobs:
+  echo-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print environment variable
+        run: echo "HUBB_USER=${{ vars.HUBB_USER }}"
