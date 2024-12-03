@@ -4,7 +4,15 @@ on:
   push:
     branches:
       - devops  # Se activa automáticamente en esta rama
-  workflow_dispatch:  # Permite ejecutarlo manualmente
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Choose the environment to deploy'
+        required: true
+        default: 'develop'
+        type: choice
+        options:
+          - develop
 
 jobs:
   echo-job:
