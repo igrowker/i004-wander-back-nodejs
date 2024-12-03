@@ -24,11 +24,9 @@ export const userRegistrationSchema = yup.object().shape({
         .oneOf(['tourist', 'provider'], 'Invalid role')
         .required('Role is required'),
     
-    location: yup.array()
-        .of(yup.string()
-            .min(2, "Each field must be at least 3 characters long"))
-            .max(25, "Each field cannot exceed 25 characters")
-        .required("The location is required"),
+    location: yup.string()
+        .optional()
+        .max(100, 'Location cannot exceed 100 characters'),
 
     phone: yup.string()
         .required()
