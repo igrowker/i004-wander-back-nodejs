@@ -1978,3 +1978,93 @@
  *       500:
  *         description: Internal server error occurred.
  */
+
+// UPDATE BOOKING ENDPOINT BY ID
+/**
+ * @swagger
+ * /api/bookings/{id}:
+ *   put:
+ *     summary: Update a booking
+ *     description: Update a booking with the specified ID.
+ *     tags:
+ *       - Bookings
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: The ID of the booking to update
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateBookingRequest'
+ *     responses:
+ *       '200':
+ *         description: The booking was updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Booking'
+ *       '400':
+ *         description: Invalid request data
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ValidationError'
+ *       '401':
+ *         description: Bearer token is required
+ *       '500':
+ *         description: Error processing the request
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   description: The error message
+ * components:
+ *   schemas:
+ *     UpdateBookingRequest:
+ *       type: object
+ *       properties:
+ *         experienceId:
+ *           type: string
+ *         userId:
+ *           type: string
+ *         status:
+ *           type: string
+ *           enum:
+ *             - pending
+ *             - confirmed
+ *             - canceled
+ *         totalPrice:
+ *           type: number
+ *         participants:
+ *           type: number
+ *         paymentStatus:
+ *           type: string
+ *           enum:
+ *             - paid
+ *             - pending
+ *     Booking:
+ *       $ref: '#/components/schemas/Booking'
+ *     ValidationError:
+ *       type: object
+ *       properties:
+ *         error:
+ *           type: string
+ *           description: The error message
+ *           example: Invalid request data
+ *         details:
+ *           type: array
+ *           items:
+ *             type: string
+ *             description: The validation error details
+ *             example:
+ *               - Field is required
+ *               - Must be a valid email
+ */
