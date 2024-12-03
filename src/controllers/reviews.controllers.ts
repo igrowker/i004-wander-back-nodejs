@@ -1,4 +1,4 @@
-import { Response, Request, NextFunction } from "express";
+import { Response, Request } from "express";
 import axios from "axios";
 import { uploadReviewSchema, updateReviewSchema } from "../types/yup-validations";
 import * as yup from "yup";
@@ -7,7 +7,12 @@ const JAVA_BACKEND_URL = process.env.JAVA_BACKEND_URL;
 
 const uploadReview = async (req: Request, res: Response) => {
 
-  const token = req.headers.authorization?.split(" ")[1];
+  const token = req.headers.authorization?.split(" ")[1] || null;
+  const headers: Record<string, string> = {};
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
   const validData = await uploadReviewSchema.validate(req.body, {
     abortEarly: false,
   });
@@ -15,9 +20,9 @@ const uploadReview = async (req: Request, res: Response) => {
   try {
 
     const response = await axios.post(`${JAVA_BACKEND_URL}/reviews`, {
-      ...validData
+      ...validData,
     }, {
-      headers: { Authorization: `Bearer ${token}` }
+      headers
     });
 
     const { review } = response.data
@@ -47,12 +52,17 @@ const uploadReview = async (req: Request, res: Response) => {
 
 const deleteReview = async (req: Request, res: Response) => {
 
+  const token = req.headers.authorization?.split(" ")[1] || null;
+  const headers: Record<string, string> = {};
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
   const id = req.params.id;
-  const token = req.headers.authorization?.split(" ")[1];
 
   try {
     const response = await axios.delete(`${JAVA_BACKEND_URL}/reviews/${id}`, {
-      headers: { Authorization: `Bearer ${token}` }
+      headers
     })
 
     return res.status(200).json({
@@ -94,7 +104,6 @@ const updateReview = async (req: Request, res: Response) => {
       return res.status(400).json({ error: "reviewId and userId are required" });
     }
 
-    // Ya nos viene la info de la reseña desde el front!
     // Consulta al backend principal para obtener la reseña
     const reviewResponse = await axios.get(`${JAVA_BACKEND_URL}/reviews/${reviewId}`);
     const review = reviewResponse.data;
@@ -141,12 +150,9 @@ const updateReview = async (req: Request, res: Response) => {
 
 const getReviewsByExperienceId = async (req: Request, res: Response) => {
   const experienceId = req.params.experienceId;
-  const token = req.headers.authorization?.split(" ")[1];
 
   try {
-    const response = await axios.get(`${JAVA_BACKEND_URL}/reviews/experience/${experienceId}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    });
+    const response = await axios.get(`${JAVA_BACKEND_URL}/reviews/experience/${experienceId}`);
 
     const reviews = response.data;
     res.json(reviews);

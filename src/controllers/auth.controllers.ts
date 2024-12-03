@@ -29,13 +29,14 @@ const login = async (req: Request, res: Response) => {
         });
 
         //If successful, store the response
-        const { token, user } = response.data;
+        const { token, user, idUser } = response.data;
 
         //Send the token and and user details
         return res.json({
             message: "Log in successful",
             token,
-            user
+            user, 
+            userId: idUser
         });
 
     } catch (error: any) {
@@ -81,45 +82,48 @@ const logout = async (req: Request, res: Response) => {
     }
 };
 
-//Maybe not needed?
-// const getProfile = async (req: Request, res: Response, next: NextFunction) => {
-//     const userId = req.params.userId;
+const getProfile = async (req: Request, res: Response) => {
+    const token = req.headers.authorization?.split(" ")[1] || null;
 
-//     try {
-//         // Send a request to the backend to retrieve the user's profile using userId
-//         const response = await axios.get(`${JAVA_BACKEND_URL}/api/users/profile/${userId}`);
+    try {
+        const headers: Record<string, string> = {};
+        if (token) {
+            headers.Authorization = `Bearer ${token}`;
+        }
 
-//         // Extract the user profile data from the response
-//         const profile = response.data;
+        // Send a request to the backend to retrieve the user's profile using userId
+        const response = await axios.get(`${JAVA_BACKEND_URL}/api/users/profile`, { headers });
 
-//         return res.status(200).json({
-//             message: "Retrieved user data successfully.",
-//             profile
-//         });
+        // Extract the user profile data from the response
+        const profile = response.data;
 
-//     } catch (error: any) {
-//         console.error("Error retrieving profile:", error);
+        return res.status(200).json({
+            message: "Retrieved user data successfully.",
+            profile
+        });
 
-//         if (error.response) {
-//             switch (error.response.status) {
-//                 case 401:
-//                     return res.status(401).json({ message: "Unauthorized access" });
-//                 case 404:
-//                     return res.status(404).json({ message: "Profile not found" });
-//                 default:
-//                     return res.status(500).json({ message: "Internal server error" });
-//             }
-//         }
+    } catch (error: any) {
+        console.error("Error retrieving profile:", error);
 
-//         return res.status(500).json({ message: "Internal server error" });
-//     }
-// };
+        if (error.response) {
+            switch (error.response.status) {
+                case 401:
+                    return res.status(401).json({ message: "Unauthorized access" });
+                case 404:
+                    return res.status(404).json({ message: "Profile not found" });
+                default:
+                    return res.status(500).json({ message: "Internal server error" });
+            }
+        }
+
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
 
 
-//TO REVIEW
 const updateProfile = async (req: Request, res: Response) => {
     
-    const token = req.headers.authorization?.split(" ")[1];
+    const token = req.headers.authorization?.split(" ")[1] || null;
     const validData = await updateProfileSchema.validate(req.body, {
         abortEarly: false,
     });
@@ -129,11 +133,15 @@ const updateProfile = async (req: Request, res: Response) => {
     }
 
     try {
-        const userId = req.params.userId;
 
-        // Send the updated data to the backend, including userId
-        const response = await axios.put(`${JAVA_BACKEND_URL}/api/users/profile/${userId}`, validData, {
-            headers: { Authorization: `Bearer ${token}` }
+        const headers: Record<string, string> = {};
+        if (token) {
+            headers.Authorization = `Bearer ${token}`;
+        }
+
+        // Send the updated data to the backend
+        const response = await axios.put(`${JAVA_BACKEND_URL}/api/users/profile`, validData, {
+            headers
         });
 
         // If successful, return the updated profile data
@@ -241,7 +249,27 @@ const verificationCode = async (req: Request, res: Response) => {
 
 const resendVerificationCode = async (req: Request, res: Response) => {
     
-}
+    try {
+        const response  = await axios.post(`${JAVA_BACKEND_URL}/api/autenticacion/reenviar-codigo`)
+
+        return res.status(200).json({
+            message: "Code re-sent",
+        });
+
+    } catch (error: any) {
+        console.error("Error verifying user:", error);
+
+        if (axios.isAxiosError(error) && error.response) {
+            return res.status(error.response.status).json({
+
+                message: "Error communicating with the service",
+                details: error.response.data,
+            });
+        }
+
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};
 
 const verify = (req: Request, res: Response) => {
 
@@ -252,4 +280,4 @@ const verify = (req: Request, res: Response) => {
     return res.status(200).json(req.payload);
 };
 
-export { register, login, verify, logout, updateProfile, verificationCode };
+export { register, login, verify, getProfile, logout, updateProfile, verificationCode, resendVerificationCode };
