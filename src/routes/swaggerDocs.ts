@@ -2099,3 +2099,34 @@
  *       500:
  *         description: Error interno del servidor
  */
+
+// GET BOOKINGS BY EXPERIENCE ENDPOINT
+/**
+ * @swagger
+ * /bookings/experience/{experienceId}:
+ *   get:
+ *     summary: Obtiene las bookings de una experiencia por su ID
+ *     description: Realiza una petición a la API de Java para obtener las bookings de la experiencia con el ID proporcionado
+ *     parameters:
+ *       - in: path
+ *         name: experienceId
+ *         required: true
+ *         description: ID de la experiencia
+ *       - in: header
+ *         name: Authorization
+ *         required: true
+ *         description: Bearer token de autenticación
+ *     responses:
+ *       200:
+ *         description: Bookings de la experiencia
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Booking'
+ *       401:
+ *         description: Bearer token is required
+ *       500:
+ *         description: Internal server error
+ */
