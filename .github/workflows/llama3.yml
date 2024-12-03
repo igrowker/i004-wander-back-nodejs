@@ -11,6 +11,8 @@ on:
 jobs:
   echo-job:
     runs-on: ubuntu-latest
+    environment:
+      name: devops # Asocia el entorno devops
 
     steps:
       - name: Check out repository
