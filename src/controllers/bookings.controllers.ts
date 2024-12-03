@@ -93,5 +93,23 @@ const updateBooking = async (req: Request, res: Response) => {
 
   //GET bookings/experience/{experienceId}
   //GET bookings/user/{userId}
+  const getBookingsByUser = async (req: Request, res: Response) => {
+    const { userId } = req.params;
+    const token = req.headers.authorization?.split(" ")[1];
+  
+    if (!token) {
+      return res.status(401).json({ error: 'Bearer token is required' });
+    }
+  
+    try {
+      const response = await axios.get(`${JAVA_BACKEND_URL}/bookings/user/${userId}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      res.json(response.data);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  }
 
-export { getBookingsById, makeBookings, updateBooking };
+export { getBookingsById, makeBookings, updateBooking, getBookingsByUser };

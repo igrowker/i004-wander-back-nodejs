@@ -2853,6 +2853,47 @@
           }
         }
       }
+    },
+    "/bookings/user/{userId}": {
+      "get": {
+        "summary": "Obtiene las bookings de un usuario por su ID",
+        "description": "Realiza una petición a la API de Java para obtener las bookings del usuario con el ID proporcionado",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "userId",
+            "required": true,
+            "description": "ID del usuario"
+          },
+          {
+            "in": "header",
+            "name": "Authorization",
+            "required": true,
+            "description": "Bearer token de autenticación"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bookings del usuario",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Booking"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Bearer token no proporcionado o inválido"
+          },
+          "500": {
+            "description": "Error interno del servidor"
+          }
+        }
+      }
     }
   },
   "components": {
