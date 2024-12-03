@@ -17,4 +17,4 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Run echo command
-        run: echo "¡Hola, esta es una prueba de GitHub Actions!"
+        run: echo "HUBB_USER=${{ env.HUBB_USER }}"
