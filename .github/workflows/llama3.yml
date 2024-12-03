@@ -12,11 +12,11 @@ jobs:
   echo-job:
     runs-on: ubuntu-latest
     environment:
-      name: devops # Asocia el entorno devops
+      name: devops # Asocia el entorno 'devops'
 
     steps:
       - name: Check out repository
         uses: actions/checkout@v3
 
-      - name: Run echo command
-        run: echo "HUBB_USER=${{ env.HUBB_USER }}"
+      - name: Print environment variable
+        run: echo "HUBB_USER=${{ secrets.HUBB_USER }}"
