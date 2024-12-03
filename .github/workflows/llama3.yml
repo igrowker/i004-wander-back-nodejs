@@ -9,8 +9,6 @@ on:
 jobs:
   echo-job:
     runs-on: ubuntu-latest
-    environment:
-      name: devops
     steps:
       - name: Print environment variable
         run: echo "HUBB_USER=${{ vars.HUBB_USER }}"
