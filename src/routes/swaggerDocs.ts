@@ -49,7 +49,7 @@
 // PASSWORD RECOVERY ENDPOINT
 /**
  * @swagger
- * /api/recoverPassword:
+ * /api/recovery/forgot-password:
  *   post:
  *     summary: Create a token to request a password recovery.
  *     tags: [Password Recovery]
@@ -84,8 +84,6 @@
  *       500:
  *         description: Internal Server Error
  */
-
-import { create } from "domain"
 
 // LOGOUT USER
 /**
@@ -202,13 +200,23 @@ import { create } from "domain"
  *                 type: string
  *                 example: "Pedro"
  *               location:
- *                 type: string
- *                 example: "Spain"
+ *                 type: array
+ *                 items: string
+ *                 example: ["Spain", "Valencia"]
  *               preferences:
  *                 type: array
  *                 items:
  *                   type: string
  *                 description: Optional user preferences (e.g., ["adventure", "beach"]).
+ *               role:
+ *                 type: string
+ *                 example: "tourist"
+ *               phone:
+ *                 type: string
+ *                 example: "+12345678900"
+ *               password:
+ *                 type: string
+ *                 example: "NewPassword!"
  *     responses:
  *       200:
  *         description: Profile updated successfully
@@ -230,8 +238,8 @@ import { create } from "domain"
  *                       type: string
  *                       example: "New Name"
  *                     location:
- *                       type: string
- *                       example: "New York, USA"
+ *                       type: array
+ *                       example: ["New York", "USA"]
  *                     preferences:
  *                       type: array
  *                       items:
@@ -295,9 +303,12 @@ import { create } from "domain"
  *                 example: ["adventure", "beach"]
  *                 description: User's personal preferences.
  *               location:
- *                 type: string
- *                 example: "New York, USA"
+ *                 type: array
+ *                 example: ["New York", "USA"]
  *                 description: User's location.
+ *               phone:
+ *                 type: string
+ *                 example: "+12345678900"
  *     responses:
  *       200:
  *         description: Registration successful
@@ -373,7 +384,7 @@ import { create } from "domain"
  *                     example: "Skydiving Adventure"
  *                   location:
  *                     type: string
- *                     example: "California"
+ *                     example: ["California"]
  *       500:
  *         description: Internal server error
  *         content:
@@ -420,7 +431,7 @@ import { create } from "domain"
  *                   type: string
  *                   description: A detailed description of the experience.
  *                 location:
- *                   type: string
+ *                   type: array
  *                   description: The location where the experience takes place.
  *                 hostId:
  *                   type: string
@@ -500,8 +511,8 @@ import { create } from "domain"
  *               - price
  *               - availabilityDates
  *               - tags
- *               - rating
  *               - capacity
+ *               - hostId
  *             properties:
  *               title:
  *                 type: string
@@ -512,8 +523,8 @@ import { create } from "domain"
  *                 example: "One hour of horse riding with an instructor."
  *                 description: Detailed description of the experience.
  *               location:
- *                 type: string
- *                 example: "Oviedo, Spain"
+ *                 type: array
+ *                 example: ["Oviedo", "Spain"]
  *                 description: Location where the experience takes place.
  *               providerId:
  *                 type: string
@@ -535,17 +546,9 @@ import { create } from "domain"
  *                 items:
  *                   type: string
  *                 description: Tags associated with the experience.
- *               rating:
- *                 type: number
- *                 format: float
- *                 description: Rating of the experience (0-5).
  *               capacity:
  *                 type: number
  *                 description: Maximum number of participants for the experience.
- *               createdAt:
- *                 type: string
- *                 format: date-time
- *                 description: Date when the experience was created.
  *     responses:
  *       200:
  *         description: Experience registered successfully.
@@ -564,7 +567,7 @@ import { create } from "domain"
  *                   type: string
  *                   description: Detailed description of the experience.
  *                 location:
- *                   type: string
+ *                   type: array
  *                   description: Location where the experience takes place.
  *                 hostId:
  *                   type: string
@@ -584,17 +587,9 @@ import { create } from "domain"
  *                   items:
  *                     type: string
  *                   description: Tags associated with the experience.
- *                 rating:
- *                   type: number
- *                   format: float
- *                   description: Rating of the experience.
  *                 capacity:
  *                   type: number
  *                   description: Maximum number of participants for the experience.
- *                 createdAt:
- *                   type: string
- *                   format: date-time
- *                   description: Date when the experience was created.
  *       400:
  *         description: Bad Request || Invalid data provided (e.g., missing required fields).
  *         content:
@@ -663,7 +658,7 @@ import { create } from "domain"
  *         application/json:
  *           schema:
  *             type: object
- *             required:
+ *               - experienceId
  *               - title
  *               - description
  *               - location
@@ -671,9 +666,12 @@ import { create } from "domain"
  *               - price
  *               - availabilityDates
  *               - tags
- *               - rating
  *               - capacity
  *             properties:
+ *               experienceId:
+ *                 type: string
+ *                 example: "kjlsad89ahf9a8rwofa2"
+ *                 description: The Id of the experience.
  *               title:
  *                 type: string
  *                 example: "Horse Riding"
@@ -683,8 +681,8 @@ import { create } from "domain"
  *                 example: "One hour of horse riding with an instructor."
  *                 description: Detailed description of the experience.
  *               location:
- *                 type: string
- *                 example: "Oviedo, Spain"
+ *                 type: array
+ *                 example: ["Oviedo", "Spain"]
  *                 description: Location where the experience takes place.
  *               providerId:
  *                 type: string
@@ -706,10 +704,6 @@ import { create } from "domain"
  *                 items:
  *                   type: string
  *                 description: Tags associated with the experience.
- *               rating:
- *                 type: number
- *                 format: float
- *                 description: Rating of the experience (0-5).
  *               capacity:
  *                 type: number
  *                 description: Maximum number of participants for the experience.
@@ -839,13 +833,13 @@ import { create } from "domain"
  *               - experienceId
  *               - rating
  *               - comment
- *               - date
+ *               - userId
  *             properties:
  *               experienceId:
  *                 type: string
  *                 example: "experience123"
  *                 description: ID of the experience being reviewed.
- *               idUser:
+ *               userId:
  *                 type: string
  *                 example: "64afc392d9e3b0a9e8c92f11"
  *                 description: ID of the user creating the experience.
@@ -857,10 +851,6 @@ import { create } from "domain"
  *                 type: string
  *                 example: "It was an amazing experience!"
  *                 description: User's comment about the experience.
- *               date:
- *                 type: string
- *                 format: date-time
- *                 description: Date when the review was submitted.
  *     responses:
  *       200:
  *         description: Review uploaded successfully.
@@ -926,6 +916,8 @@ import { create } from "domain"
  * @swagger
  * /api/bookings/{id}:
  *   get:
+ *     tags:
+ *       - Bookings
  *     summary: Retrieves a booking by ID
  *     description: Returns the booking data for the specified ID
  *     parameters:
@@ -1181,81 +1173,6 @@ import { create } from "domain"
  *                   example: "An unexpected error occurred while deleting the review. Please try again later."
  */
 
-//VERIFY USER ENDPOINT
-/**
- * @swagger
- * /api/auth/verify-user:
- *   post:
- *     summary: Verify a user
- *     tags: [UserAuth]
- *     requestBody:
- *       required: true
- *       content:
- *         application/json:
- *           schema:
- *             type: object
- *             required:
- *               - email
- *               - verificationCode
- *             properties:
- *               email:
- *                 type: string
- *                 format: email
- *                 example: "user@sample.com"
- *                 description: The email of the user to verify.
- *               verificationCode:
- *                 type: string
- *                 example: "123456"
- *                 description: The verification code sent to the user.
- *     responses:
- *       200:
- *         description: Verification successful.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Verification successful"
- *                 data:
- *                   type: object
- *                   description: Data returned from the verification service.
- *       400:
- *         description: Bad Request || Invalid data provided (e.g., missing required fields).
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Invalid input data"
- *       401:
- *         description: Unauthorized || No valid token provided.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Unauthorized access"
- *       500:
- *         description: Internal Server Error || An unexpected error occurred.
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   example: "Internal server error"
- *                 details:
- *                   type: string
- *                   example: "Error communicating with the verification service"
- */
-
 // UPDATE REWIEV ENDPOINT
 /**
  * @swagger
@@ -1414,3 +1331,650 @@ import { create } from "domain"
  *                   example: "Error getting reviews."
  */
 
+//VERIFY-USER ENDPOINT
+/**
+ * @swagger
+ * /api/auth/verify-user:
+ *   post:
+ *     summary: Verify a user with a verification code
+ *     description: Validates user input and sends the data to the backend to verify the user's account.
+ *     tags:
+ *       - UserAuth
+ *     requestBody:
+ *       description: The user verification data.
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 format: email
+ *                 example: user@sample.com
+ *                 description: The email address of the user.
+ *               code:
+ *                 type: string
+ *                 example: "123456"
+ *                 description: The verification code sent to the user.
+ *             required:
+ *               - email
+ *               - code
+ *     responses:
+ *       200:
+ *         description: User verification successful.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Verification successful
+ *                   description: Success message.
+ *                 data:
+ *                   type: object
+ *                   description: Response data from the backend.
+ *       400:
+ *         description: Invalid input data.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Error communicating with the verification service
+ *                 details:
+ *                   type: object
+ *                   description: Details about the validation error.
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ */
+
+//RE-SEND CODE ENDPOINT
+/**
+ * @swagger
+ * /api/auth/resend-code:
+ *   post:
+ *     summary: Resend the user verification code
+ *     description: Sends a request to the backend to resend the user's verification code.
+ *     tags:
+ *       - UserAuth
+ *     responses:
+ *       200:
+ *         description: Verification code re-sent successfully.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Code re-sent
+ *                   description: Success message.
+ *       400:
+ *         description: Bad request or validation error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Error communicating with the service
+ *                   description: Error message.
+ *                 details:
+ *                   type: object
+ *                   description: Additional details about the error from the backend.
+ *       500:
+ *         description: Internal server error.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 message:
+ *                   type: string
+ *                   example: Internal server error
+ */
+
+//GET EXPERIENCES BY HOST ENDPOINT
+/**
+ * @swagger
+ * /api/experiences/host/{hostId}:
+ *   get:
+ *     tags:
+ *       - Experiences
+ *     summary: Retrieve all experiences for a specific host.
+ *     description: Fetches a list of experiences associated with a given host, filtered by query parameters if provided.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: The unique identifier of the host.
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: title
+ *         description: Filter experiences by title.
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: location
+ *         description: Filter experiences by location.
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ *       - in: query
+ *         name: price
+ *         description: Filter experiences by price range.
+ *         schema:
+ *           type: number
+ *       - in: query
+ *         name: availabilityDates
+ *         description: Filter experiences by available dates.
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ *             format: date
+ *       - in: query
+ *         name: tags
+ *         description: Filter experiences by tags.
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ *       - in: query
+ *         name: capacity
+ *         description: Filter experiences by capacity.
+ *         schema:
+ *           type: number
+ *     responses:
+ *       200:
+ *         description: A list of experiences for the specified host.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     description: The unique identifier of the experience.
+ *                   title:
+ *                     type: string
+ *                     description: The title of the experience.
+ *                   description:
+ *                     type: string
+ *                     description: Detailed description of the experience.
+ *                   location:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                     description: Array of strings describing the location of the experience.
+ *                   price:
+ *                     type: number
+ *                     description: Price of the experience.
+ *                   availabilityDates:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                       format: date
+ *                     description: Array of available dates for the experience.
+ *                   tags:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                     description: Tags associated with the experience.
+ *                   capacity:
+ *                     type: number
+ *                     description: The capacity of participants for the experience.
+ *                   hostId:
+ *                     type: string
+ *                     description: The ID of the host associated with the experience.
+ *       400:
+ *         description: Bad request. ID parameter is missing or query parameters are invalid.
+ *       404:
+ *         description: No experiences found for the provided host ID.
+ *       500:
+ *         description: An internal server error occurred.
+ */
+
+//GET TOP RATED EXPERIENCES ENDPOINT
+/**
+ * @swagger
+ * /api/experiences/top-rated:
+ *   get:
+ *     tags:
+ *       - Experiences
+ *     summary: Retrieve a list of top-rated experiences.
+ *     description: Fetches a list of top-rated experiences, filtered by query parameters if provided.
+ *     parameters:
+ *       - in: query
+ *         name: title
+ *         description: Filter top-rated experiences by title.
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: location
+ *         description: Filter top-rated experiences by location.
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ *       - in: query
+ *         name: price
+ *         description: Filter top-rated experiences by price range.
+ *         schema:
+ *           type: number
+ *       - in: query
+ *         name: availabilityDates
+ *         description: Filter top-rated experiences by available dates.
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ *             format: date
+ *       - in: query
+ *         name: tags
+ *         description: Filter top-rated experiences by tags.
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ *       - in: query
+ *         name: capacity
+ *         description: Filter top-rated experiences by capacity.
+ *         schema:
+ *           type: number
+ *     responses:
+ *       200:
+ *         description: A list of top-rated experiences.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     description: The unique identifier of the experience.
+ *                   title:
+ *                     type: string
+ *                     description: The title of the experience.
+ *                   description:
+ *                     type: string
+ *                     description: Detailed description of the experience.
+ *                   location:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                     description: Array of strings describing the location of the experience.
+ *                   price:
+ *                     type: number
+ *                     description: Price of the experience.
+ *                   availabilityDates:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                       format: date
+ *                     description: Array of available dates for the experience.
+ *                   tags:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                     description: Tags associated with the experience.
+ *                   capacity:
+ *                     type: number
+ *                     description: The capacity of participants for the experience.
+ *                   hostId:
+ *                     type: string
+ *                     description: The ID of the host associated with the experience.
+ *       400:
+ *         description: Bad request. Query parameters are invalid.
+ *       404:
+ *         description: No top-rated experiences found.
+ *       500:
+ *         description: An internal server error occurred.
+ */
+
+//MOST BOOKED EXPERIENCES ENDPOINT
+/**
+ * @swagger
+ * /api/experiences/most-booked:
+ *   get:
+ *     tags:
+ *       - Experiences
+ *     summary: Retrieve a list of most-booked experiences.
+ *     description: Fetches a list of the most-booked experiences, filtered by query parameters if provided.
+ *     parameters:
+ *       - in: query
+ *         name: title
+ *         description: Filter most-booked experiences by title.
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: location
+ *         description: Filter most-booked experiences by location.
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ *       - in: query
+ *         name: price
+ *         description: Filter most-booked experiences by price range.
+ *         schema:
+ *           type: number
+ *       - in: query
+ *         name: availabilityDates
+ *         description: Filter most-booked experiences by available dates.
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ *             format: date
+ *       - in: query
+ *         name: tags
+ *         description: Filter most-booked experiences by tags.
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ *       - in: query
+ *         name: capacity
+ *         description: Filter most-booked experiences by capacity.
+ *         schema:
+ *           type: number
+ *     responses:
+ *       200:
+ *         description: A list of the most-booked experiences.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     description: The unique identifier of the experience.
+ *                   title:
+ *                     type: string
+ *                     description: The title of the experience.
+ *                   description:
+ *                     type: string
+ *                     description: Detailed description of the experience.
+ *                   location:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                     description: Array of strings describing the location of the experience.
+ *                   price:
+ *                     type: number
+ *                     description: Price of the experience.
+ *                   availabilityDates:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                       format: date
+ *                     description: Array of available dates for the experience.
+ *                   tags:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                     description: Tags associated with the experience.
+ *                   capacity:
+ *                     type: number
+ *                     description: The capacity of participants for the experience.
+ *                   hostId:
+ *                     type: string
+ *                     description: The ID of the host associated with the experience.
+ *       400:
+ *         description: Bad request. Query parameters are invalid.
+ *       404:
+ *         description: No most-booked experiences found.
+ *       500:
+ *         description: An internal server error occurred.
+ */
+
+//LATEST EXPERIENCES ENDPOINT
+/**
+ * @swagger
+ * /api/experiences/latest:
+ *   get:
+ *     tags:
+ *       - Experiences
+ *     summary: Retrieve a list of the latest experiences.
+ *     description: Fetches a list of the most recent experiences, filtered by query parameters if provided.
+ *     parameters:
+ *       - in: query
+ *         name: title
+ *         description: Filter latest experiences by title.
+ *         schema:
+ *           type: string
+ *       - in: query
+ *         name: location
+ *         description: Filter latest experiences by location.
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ *       - in: query
+ *         name: price
+ *         description: Filter latest experiences by price range.
+ *         schema:
+ *           type: number
+ *       - in: query
+ *         name: availabilityDates
+ *         description: Filter latest experiences by available dates.
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ *             format: date
+ *       - in: query
+ *         name: tags
+ *         description: Filter latest experiences by tags.
+ *         schema:
+ *           type: array
+ *           items:
+ *             type: string
+ *       - in: query
+ *         name: capacity
+ *         description: Filter latest experiences by capacity.
+ *         schema:
+ *           type: number
+ *     responses:
+ *       200:
+ *         description: A list of the latest experiences.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     description: The unique identifier of the experience.
+ *                   title:
+ *                     type: string
+ *                     description: The title of the experience.
+ *                   description:
+ *                     type: string
+ *                     description: Detailed description of the experience.
+ *                   location:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                     description: Array of strings describing the location of the experience.
+ *                   price:
+ *                     type: number
+ *                     description: Price of the experience.
+ *                   availabilityDates:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                       format: date
+ *                     description: Array of available dates for the experience.
+ *                   tags:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                     description: Tags associated with the experience.
+ *                   capacity:
+ *                     type: number
+ *                     description: The capacity of participants for the experience.
+ *                   hostId:
+ *                     type: string
+ *                     description: The ID of the host associated with the experience.
+ *       400:
+ *         description: Bad request. Query parameters are invalid.
+ *       404:
+ *         description: No latest experiences found.
+ *       500:
+ *         description: An internal server error occurred.
+ */
+
+//GET EXPERIENCES BY TAG ENDPOINT
+/**
+ * @swagger
+ * /api/experiences/tags/{tag}:
+ *   get:
+ *     tags:
+ *       - Experiences
+ *     summary: Retrieve a list of experiences by tag.
+ *     description: Fetches experiences filtered by a specific tag.
+ *     parameters:
+ *       - in: path
+ *         name: tag
+ *         required: true
+ *         description: The tag to filter experiences by.
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: A list of experiences filtered by the provided tag.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   id:
+ *                     type: string
+ *                     description: The unique identifier of the experience.
+ *                   title:
+ *                     type: string
+ *                     description: The title of the experience.
+ *                   description:
+ *                     type: string
+ *                     description: Detailed description of the experience.
+ *                   location:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                     description: Array of strings describing the location of the experience.
+ *                   price:
+ *                     type: number
+ *                     description: Price of the experience.
+ *                   availabilityDates:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                       format: date
+ *                     description: Array of available dates for the experience.
+ *                   tags:
+ *                     type: array
+ *                     items:
+ *                       type: string
+ *                     description: Tags associated with the experience.
+ *                   capacity:
+ *                     type: number
+ *                     description: The capacity of participants for the experience.
+ *                   hostId:
+ *                     type: string
+ *                     description: The ID of the host associated with the experience.
+ *       400:
+ *         description: Bad request. The tag parameter is missing or invalid.
+ *       404:
+ *         description: No experiences found with the provided tag.
+ *       500:
+ *         description: Internal server error occurred.
+ */
+
+//GET TAGS ENDPOINT
+/**
+ * @swagger
+ * /api/experiences/tags:
+ *   get:
+ *     tags:
+ *       - Experiences
+ *     summary: Retrieve all available tags for experiences.
+ *     description: Fetches a list of all tags that can be associated with experiences.
+ *     responses:
+ *       200:
+ *         description: A list of all tags available for experiences.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *                 description: A tag associated with experiences.
+ *       404:
+ *         description: No tags found.
+ *       500:
+ *         description: Internal server error occurred.
+ */
+
+//RESET PASSWORD ENDPOINT
+/**
+ * @swagger
+ * /api/recovery/reset-password:
+ *   post:
+ *     tags:
+ *       - Password Recovery
+ *     summary: Reset the user's password.
+ *     description: Allows a user to set a new password by providing their email, verification code, and new password.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               newPassword:
+ *                 type: string
+ *                 description: The new password for the user.
+ *                 example: "NewPassword123@"
+ *               email:
+ *                 type: string
+ *                 description: The user's email address.
+ *                 example: "user@sample.com"
+ *               code:
+ *                 type: string
+ *                 description: The verification code sent to the user.
+ *                 example: "123456"
+ *     responses:
+ *       200:
+ *         description: New password successfully set.
+ *       400:
+ *         description: Bad request due to validation errors. Includes error details in the response.
+ *       500:
+ *         description: Internal server error occurred.
+ */
