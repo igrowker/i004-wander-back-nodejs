@@ -1,5 +1,4 @@
 name: Test Echo Action
-
 on:
   push:
     branches:
@@ -7,18 +6,11 @@ on:
   pull_request:
     branches:
       - devops
-
 jobs:
   echo-job:
     runs-on: ubuntu-latest
     environment:
-      name: devops # Asocia el entorno 'devops'
-
+      name: devops
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v3
-
       - name: Print environment variable
-        env:
-          HUBB_USER: ${{ github.env.HUBB_USER }}
-        run: echo "HUBB_USER=${{ env.HUBB_USER }}"
+        run: echo "HUBB_USER=${{ vars.HUBB_USER }}"
