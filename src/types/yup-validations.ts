@@ -153,6 +153,16 @@ export const bookingSchema = yup.object().shape({
     paymentStatus: yup.string().oneOf(['paid', 'pending']).required(),
   });
 
+//Schema for update a booking
+export const updateBookingSchema = yup.object().shape({
+    experienceId: yup.string(),
+    userId: yup.string().required(),
+    status: yup.string().oneOf(['pending', 'confirmed', 'canceled']),
+    totalPrice: yup.number(),
+    participants: yup.number(),
+    paymentStatus: yup.string().oneOf(['paid', 'pending']),
+  });
+
 export const userVerification = yup.object().shape({
     email: yup.string()
         .email('Invalid email address')

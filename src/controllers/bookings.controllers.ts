@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
 import axios from "axios";
-import { bookingSchema } from "../types/yup-validations";
+import { bookingSchema, updateBookingSchema } from "../types/yup-validations";
 import * as yup from "yup";
 
 const JAVA_BACKEND_URL = process.env.JAVA_BACKEND_URL;
@@ -48,6 +48,49 @@ const makeBookings = async (req: Request, res: Response) => {
   }
 }
 
+// PUT updateBooking endpoint
+const updateBooking = async (req: Request, res: Response) => {
+  try {
+    const validatedData = await updateBookingSchema.validate(req.body, {
+      abortEarly: false,
+    });
+
+    const { id } = req.params;
+    const { bearerToken } = req.headers;
+
+    if (!bearerToken) {
+      return res.status(401).json({ error: 'Bearer token is required' });
+    }
+
+    const booking = {
+      experienceId: validatedData.experienceId,
+      userId: validatedData.userId,
+      status: validatedData.status,
+      totalPrice: validatedData.totalPrice,
+      participants: validatedData.participants,
+      paymentStatus: validatedData.paymentStatus,
+    };
+
+    const response = await axios.put(`${JAVA_BACKEND_URL}/bookings/${id}`, booking, {
+      headers: {
+        Authorization: `Bearer ${bearerToken}`,
+      },
+    });
+
+    return res.json(response.data);
+  } catch (error) {
+    if (error instanceof yup.ValidationError) {
+      return res.status(400).json({
+        error: 'Error processing from yup validation',
+        details: error.inner.map((err) => err.message),
+      });
+    } else {
+      return res.status(500).json({ error: 'Error processing the request' });
+    }
+  }
+};
+
+
   //GET bookings/experience/{experienceId}
 
-export { getBookingsById, makeBookings };
+export { getBookingsById, makeBookings, updateBooking };
