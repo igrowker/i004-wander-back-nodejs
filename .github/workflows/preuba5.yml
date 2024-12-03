@@ -3,7 +3,7 @@ name: JOSE
 on:
   push:
     branches:
-      - develop  # Se activa automáticamente en esta rama
+      - devops  # Se activa automáticamente en esta rama
   workflow_dispatch:  # Permite ejecutarlo manualmente
 
 jobs:
