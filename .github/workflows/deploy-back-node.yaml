@@ -19,4 +19,4 @@ jobs:
     steps:
       - name: Echo to devops variables
         run: |
-          echo "HUBB_USER=${{ env.HUBB_USER }}"  # Imprime el valor del secreto
+          echo "HUBB_USER=${{ env.HUBB_USER }}"  # Imprime el valor del variable
