@@ -92,7 +92,7 @@ const getProfile = async (req: Request, res: Response) => {
         }
 
         // Send a request to the backend to retrieve the user's profile using userId
-        const response = await axios.get(`${JAVA_BACKEND_URL}/api/users/profile`, { headers });
+        const response = await axios.get(`${JAVA_BACKEND_URL}/api/user/profile`, { headers });
 
         // Extract the user profile data from the response
         const profile = response.data;
@@ -140,7 +140,7 @@ const updateProfile = async (req: Request, res: Response) => {
         }
 
         // Send the updated data to the backend
-        const response = await axios.put(`${JAVA_BACKEND_URL}/api/users/profile`, validData, {
+        const response = await axios.put(`${JAVA_BACKEND_URL}/api/user/profile`, validData, {
             headers
         });
 

@@ -18,7 +18,7 @@ const getBookingsById = async (req: Request, res: Response) => {
         console.error(error);
         res.status(500).json({ message: 'Internal server error' });
     }
-}
+};
 
 //Añadir token en headers
 const makeBookings = async (req: Request, res: Response) => {
@@ -46,7 +46,7 @@ const makeBookings = async (req: Request, res: Response) => {
       res.status(500).json({ message: 'Error processing the request' });
     }
   }
-}
+};
 
   //GET bookings/experience/{experienceId}
   //GET bookings/user/{userId}
