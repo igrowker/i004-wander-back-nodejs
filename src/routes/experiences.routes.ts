@@ -8,7 +8,7 @@ router.get('/get-all', getExperiences);
 router.get('/:id', getExperienceById);
 router.get('/host/:id', getExperiencesByHost);
 router.get('/top-rated', getTopRatedExperiences);
-router.get('/most-booked', getMostBookedExperiences);
+router.get('/most-reserved', getMostBookedExperiences);
 router.get('/latest', getLatestExperiences);
 router.get('/tags', getTags);
 router.get('/tags/:tag', getExperiencesByTag);

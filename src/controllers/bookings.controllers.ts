@@ -20,8 +20,8 @@ const getBookingsById = async (req: Request, res: Response) => {
   }
 };
 
-//Añadir token en headers
 const makeBookings = async (req: Request, res: Response) => {
+  const token = req.headers.authorization?.split(" ")[1];
   try {
     const validatedData = await bookingSchema.validate(req.body);
 
@@ -31,6 +31,7 @@ const makeBookings = async (req: Request, res: Response) => {
       {
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
         },
       }
     );
@@ -54,7 +55,6 @@ const makeBookings = async (req: Request, res: Response) => {
   }
 };
 
-// PUT updateBooking endpoint
 const updateBooking = async (req: Request, res: Response) => {
   try {
     const validatedData = await updateBookingSchema.validate(req.body, {
@@ -100,7 +100,6 @@ const updateBooking = async (req: Request, res: Response) => {
   }
 };
 
-//GET bookings/experience/{experienceId}
 const getBookingsByExperience = async (req: Request, res: Response) => {
   const { experienceId } = req.params;
   const token = req.headers.authorization?.split(" ")[1];
@@ -123,7 +122,6 @@ const getBookingsByExperience = async (req: Request, res: Response) => {
   }
 };
 
-//GET bookings/user/{userId}
 const getBookingsByUser = async (req: Request, res: Response) => {
   const { userId } = req.params;
   const token = req.headers.authorization?.split(" ")[1];
