@@ -4,6 +4,11 @@ on:
     branches:
       - develop
   workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag for the Docker image" # Descripción del input
+        required: true # Hace que este campo sea obligatorio
+        default: "latest"
 
 # jobs:
 #   echo-job:
@@ -25,6 +30,12 @@ jobs:
 
       - run: ls -la
       - run: docker --version
+
+      - name: Build docker image
+        run: docker build -t i004-wander-back-nodejs:${{ inputs.tag }} . #${{ github.event.inputs.tag }}
+
+      - name: ls images docker
+        run: docker images
 
       # - name: Login to Docker hub
       #   uses: docker/login-action@v3
