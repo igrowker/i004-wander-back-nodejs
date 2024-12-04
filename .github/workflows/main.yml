@@ -1,23 +1,11 @@
 name: cicd-wander
 on:
-  push:
-    branches:
-      - develop
   workflow_dispatch:
     inputs:
       tag:
         description: "Tag for the Docker image" # Descripción del input
         required: true # Hace que este campo sea obligatorio
         default: "latest"
-
-# jobs:
-#   echo-job:
-#     runs-on: ubuntu-latest
-#     environment:
-#       name: devops
-#     steps:
-#       - name: Print environment variable
-#         run: echo "HUBB_USER=${{ vars.HUBB_USER }}"
 
 jobs:
   build-and-test:
@@ -44,7 +32,3 @@ jobs:
 
       - name: Push to Docker Hub
         run: docker push ${{ vars.HUBB_USER }}/pruebas-wander:${{ inputs.tag }}
-
-      # - run: docker login
-#  jose0078/pruebas-wander:node03.1
-
