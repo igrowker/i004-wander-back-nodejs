@@ -1,8 +1,8 @@
-name: devops-main
+name: cicd-wander
 on:
-  push:
-    branches:
-      - develop
+  # push:
+  #   branches:
+  #     - develop
   workflow_dispatch:
     inputs:
       tag:
@@ -32,7 +32,7 @@ jobs:
       - run: docker --version
 
       - name: Build docker image
-        run: docker build -t i004-wander-back-nodejs:${{ inputs.tag }} . #${{ github.event.inputs.tag }}
+        run: docker build -t ${{ vars.HUBB_USER }}/pruebas-wander:${{ inputs.tag }} . #${{ github.event.inputs.tag }}
 
       - name: ls images docker
         run: docker images
@@ -42,10 +42,9 @@ jobs:
           username: ${{ vars.HUBB_USER }}
           password: ${{ secrets.HUBBB }}
 
-      - run: docker login
+      - name: Push to Docker Hub
+        uses: docker push ${{ vars.HUBB_USER }}/pruebas-wander:${{ inputs.tag }}
 
-      # - name: Login to Docker hub
-      #   uses: docker/login-action@v3
-      #   with:
-      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
-      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
+      # - run: docker login
+#  jose0078/pruebas-wander:node03.1
+
