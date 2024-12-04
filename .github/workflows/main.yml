@@ -43,7 +43,7 @@ jobs:
           password: ${{ secrets.HUBBB }}
 
       - name: Push to Docker Hub
-        uses: docker push ${{ vars.HUBB_USER }}/pruebas-wander:${{ inputs.tag }}
+        run: docker push ${{ vars.HUBB_USER }}/pruebas-wander:${{ inputs.tag }}
 
       # - run: docker login
 #  jose0078/pruebas-wander:node03.1
