@@ -1,0 +1,15 @@
+name: devops-main
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+jobs:
+  echo-job:
+    runs-on: ubuntu-latest
+    environment:
+      name: devops
+    steps:
+      - name: Print environment variable
+        run: echo "HUBB_USER=${{ vars.HUBB_USER }}"
