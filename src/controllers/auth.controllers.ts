@@ -2,6 +2,7 @@ import { Response, Request} from "express";
 import axios from "axios";
 import * as yup from "yup";
 import { userRegistrationSchema, updateProfileSchema, userVerification } from "../types/yup-validations";
+import { ValidationError } from 'yup';
 
 const JAVA_BACKEND_URL = process.env.JAVA_BACKEND_URL;
 
@@ -200,7 +201,15 @@ const register = async (req: Request, res: Response) => {
         }
         
         if (axios.isAxiosError(error)) {
-            // Errores en la comunicación con el backend principal
+            // Manejar un error 409 Conflict
+            if (error.response?.status === 409) {
+                return res.status(409).json({
+                    message: "User already exists",
+                    details: error.response.data,
+                });
+            }
+
+            // Otros errores en la comunicación con el backend principal
             return res.status(error.response?.status || 500).json({
                 message: "Error communicating with the main backend",
                 details: error.response?.data || error.message,
@@ -235,6 +244,15 @@ const verificationCode = async (req: Request, res: Response) => {
         
     } catch (error: any) {
         console.error("Error verifying user:", error);
+        if (error instanceof ValidationError) {
+            return res.status(400).json({
+                message: "Validation error",
+                errors: error.inner.map((err) => ({
+                    path: err.path,
+                    message: err.message,
+                })),
+            });
+        }
 
         if (axios.isAxiosError(error) && error.response) {
             return res.status(error.response.status).json({
