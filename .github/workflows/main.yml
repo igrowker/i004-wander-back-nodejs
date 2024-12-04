@@ -36,6 +36,13 @@ jobs:
 
       - name: ls images docker
         run: docker images
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.HUBB_USER }}
+          password: ${{ secrets.HUBBB }}
+
+      - run: docker login
 
       # - name: Login to Docker hub
       #   uses: docker/login-action@v3
