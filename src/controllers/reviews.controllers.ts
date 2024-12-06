@@ -1,6 +1,7 @@
 import { Response, Request } from "express";
 import axios from "axios";
 import { uploadReviewSchema, updateReviewSchema } from "../types/yup-validations";
+import { ValidationError } from "yup";
 import * as yup from "yup";
 
 const JAVA_BACKEND_URL = process.env.JAVA_BACKEND_URL;
@@ -34,6 +35,15 @@ const uploadReview = async (req: Request, res: Response) => {
 
   } catch (error: any) {
     console.error("Error uploading review.", error);
+    if (error instanceof ValidationError) {
+      return res.status(400).json({
+          message: "Error de validación creando review",
+          errors: error.inner.map((err) => ({
+              path: err.path,
+              message: err.message,
+          })),
+      });
+  }
 
     if (error.response) {
       switch (error.response.status) {

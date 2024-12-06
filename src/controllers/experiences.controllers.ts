@@ -1,6 +1,8 @@
 import { Response, Request } from "express";
 import axios from "axios";
 import { uploadExperienceSchema, updateExperienceSchema } from "../types/yup-validations";
+import { ValidationError } from "yup";
+import * as yup from "yup";
 
 const JAVA_BACKEND_URL = process.env.JAVA_BACKEND_URL;
 
@@ -213,7 +215,15 @@ const uploadExperience = async (req: Request, res: Response) => {
     
   } catch (error: any) {
     console.error("Error uploading experience.", error);
-
+    if (error instanceof ValidationError) {
+      return res.status(400).json({
+          message: "Error de validación creando experiencia",
+          errors: error.inner.map((err) => ({
+              path: err.path,
+              message: err.message,
+          })),
+      });
+    }
     if (error.response) {
       switch (error.response.status) {
         case 400:
@@ -258,6 +268,15 @@ const updateExperience = async (req: Request, res: Response) => {
 
   } catch (error: any) {
     console.error("Error updating experience:", error);
+    if (error instanceof ValidationError) {
+      return res.status(400).json({
+          message: "Error de validación actualizando experiencia",
+          errors: error.inner.map((err) => ({
+              path: err.path,
+              message: err.message,
+          })),
+      });
+  }
 
     if (error.response) {
       switch (error.response.status) {

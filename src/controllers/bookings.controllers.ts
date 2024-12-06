@@ -16,7 +16,7 @@ const getBookingsById = async (req: Request, res: Response) => {
     res.json(response.data);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Error de servidor interno" });
   }
 };
 
@@ -38,43 +38,41 @@ const makeBookings = async (req: Request, res: Response) => {
 
     if (response.status === 201) {
       const reserva = response.data;
-      res.status(201).json({ message: "Booking confirmed", reserva });
+      res.status(201).json({ message: "Booking confirmado", reserva });
     } else {
-      res.status(400).json({ message: "Booking rejected" });
+      res.status(400).json({ message: "Booking rechazado" });
     }
   } catch (error) {
     if (error instanceof yup.ValidationError) {
       // Error de validación de datos
       res
         .status(400)
-        .json({ message: "Validation error", errors: error.errors });
+        .json({ message: "Error de validación", errors: error.errors });
     } else {
       console.error(error);
-      res.status(500).json({ message: "Error processing the request" });
+      res.status(500).json({ message: "Error procesando la petición" });
     }
   }
 };
 
 const updateBooking = async (req: Request, res: Response) => {
+
+  const token = req.headers.authorization?.split(" ")[1];
+
   try {
     const validatedData = await updateBookingSchema.validate(req.body, {
       abortEarly: false,
     });
 
     const { id } = req.params;
-    const { bearerToken } = req.headers;
 
-    if (!bearerToken) {
-      return res.status(401).json({ error: "Bearer token is required" });
+    if (!token || token.length === 0) {
+      return res.status(401).json({ error: "El token es requerido" });
     }
 
     const booking = {
-      experienceId: validatedData.experienceId,
       userId: validatedData.userId,
       status: validatedData.status,
-      totalPrice: validatedData.totalPrice,
-      participants: validatedData.participants,
-      paymentStatus: validatedData.paymentStatus,
     };
 
     const response = await axios.put(
@@ -82,7 +80,7 @@ const updateBooking = async (req: Request, res: Response) => {
       booking,
       {
         headers: {
-          Authorization: `Bearer ${bearerToken}`,
+          Authorization: `Bearer ${token}`,
         },
       }
     );
@@ -95,7 +93,7 @@ const updateBooking = async (req: Request, res: Response) => {
         details: error.inner.map((err) => err.message),
       });
     } else {
-      return res.status(500).json({ error: "Error processing the request" });
+      return res.status(500).json({ error: "Error procesando la request" });
     }
   }
 };
@@ -105,7 +103,7 @@ const getBookingsByExperience = async (req: Request, res: Response) => {
   const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
-    return res.status(401).json({ error: "Bearer token is required" });
+    return res.status(401).json({ error: "Bearer token es requerido" });
   }
 
   try {
@@ -118,7 +116,7 @@ const getBookingsByExperience = async (req: Request, res: Response) => {
     res.json(response.data);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Error de servidor interno" });
   }
 };
 
@@ -127,7 +125,7 @@ const getBookingsByUser = async (req: Request, res: Response) => {
   const token = req.headers.authorization?.split(" ")[1];
 
   if (!token) {
-    return res.status(401).json({ error: "Bearer token is required" });
+    return res.status(401).json({ error: "Bearer token es requerido" });
   }
 
   try {
@@ -140,7 +138,7 @@ const getBookingsByUser = async (req: Request, res: Response) => {
     res.json(response.data);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: "Error de servidor interno" });
   }
 };
 
