@@ -2,128 +2,134 @@ import * as yup from "yup";
 
 export const userRegistrationSchema = yup.object().shape({
     name: yup.string()
-        .required('Name is required')
-        .min(2, 'Name must be at least 2 characters long')
-        .max(50, 'Name cannot exceed 50 characters')
-        .matches(/^[A-Za-z\s]+$/, 'Name can only contain letters and spaces'),
-    
+        .required('El nombre es obligatorio')
+        .min(2, 'El nombre debe tener al menos 2 caracteres')
+        .max(50, 'El nombre no puede tener más de 50 caracteres')
+        .matches(/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$/, 'Solo se permiten letras'),
+
     email: yup.string()
-        .email('Invalid email address')
-        .required('Email is required'),
-    
+        .email('El formato del correo es incorrecto: ejemplo@demo.com')
+        .required('El correo es obligatorio')
+        .min(2, 'El correo debe tener al menos 2 caracteres')
+        .max(50, 'El correo no puede tener más de 50 caracteres'),
+
     password: yup.string()
-        .required('Password is required')
-        .min(8, 'Password must be at least 8 characters long')
-        .max(12, 'Password cannot exceed 12 characters')
+        .required('La contraseña es obligatoria')
+        .min(8, 'La contraseña debe tener al menos 8 caracteres')
+        .max(12, 'La contraseña no puede tener más de 12 caracteres')
         .matches(
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#!]).{8,12}$/,
-            'Password must contain at least one uppercase letter, one lowercase letter, one number, and one symbol (@#!)'
+            'La contraseña debe contener al menos una minúscula, una mayúscula, un número y uno de estos caracteres (@, #, !)'
         ),
-    
+
     role: yup.string()
-        .oneOf(['tourist', 'provider'], 'Invalid role')
-        .required('Role is required'),
-    
+        .oneOf(['tourist', 'provider'], 'El rol es inválido')
+        .required('El rol es obligatorio'),
+
     location: yup.string()
-        .optional()
-        .max(100, 'Location cannot exceed 100 characters'),
+        .oneOf(['España, Italia, Francia'])
+        .required(),
 
     phone: yup.string()
-        .required()
+        .required('El número de teléfono es obligatorio')
         .matches(
             /^\+?[1-9]\d{1,14}$/,
-            'Phone number must be a valid E.164 format (e.g., +1234567890)'
-        )
-    
+            'Número de teléfono inválido (ejemplo: +3434567890)'
+        ),
 });
 
 export const updateProfileSchema = yup.object().shape({
-     name: yup.string()
-     .optional()
-     .min(2, 'Name must be at least 2 characters long')
-     .max(50, 'Name cannot exceed 50 characters')
-     .matches(/^[A-Za-z\s]+$/, 'Name can only contain letters and spaces'),
+    name: yup.string()
+        .optional()
+        .min(2, 'El nombre debe tener al menos 2 caracteres')
+        .max(50, 'El nombre no puede tener más de 50 caracteres')
+        .matches(/^[A-Za-záéíóúÁÉÍÓÚñÑ\s]+$/, 'Solo se permiten letras y espacios'),
     
     email: yup.string()
-        .email('Invalid email address')
+        .email('El formato del correo es incorrecto')
         .optional(),
     
     password: yup.string()
         .optional()
-        .min(8, 'Password must be at least 8 characters long')
-        .max(12, 'Password cannot exceed 12 characters')
+        .min(8, 'La contraseña debe tener al menos 8 caracteres')
+        .max(12, 'La contraseña no puede tener más de 12 caracteres')
         .matches(
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#!]).{8,12}$/,
-            'Password must contain at least one uppercase letter, one lowercase letter, one number, and one symbol (@#!)'
+            'La contraseña debe contener al menos una minúscula, una mayúscula, un número y uno de estos caracteres (@, #, !)'
         ),
     
     role: yup.string()
-        .oneOf(['tourist', 'provider'], 'Invalid role')
+        .oneOf(['tourist', 'provider'], 'El rol es inválido')
         .optional(),
     
     preferences: yup.array()
-        .of(yup.string().max(30, 'Each preference cannot exceed 30 characters'))
+        .of(yup.string().max(30, 'Cada preferencia no puede superar los 30 caracteres'))
         .optional(),
     
     location: yup.array()
         .of(yup.string()
-            .min(2, "Each field must be at least 3 characters long"))
-            .max(25, "Each field cannot exceed 25 characters")
-        .required("The location is required"),
+            .min(2, 'Cada campo debe tener al menos 2 caracteres'))
+            .max(25, 'Cada campo no puede superar los 25 caracteres')
+        .required('La ubicación es obligatoria'),
 
     phone: yup.string()
         .optional()
         .matches(
             /^\+?[1-9]\d{1,14}$/,
-            'Phone number must be a valid E.164 format (e.g., +1234567890)'
-        )
+            'Número de teléfono inválido (ejemplo: +1234567890)'
+        ),
 });
 
 export const uploadExperienceSchema = yup.object().shape({
     title: yup.string()
-        .required("The title is required")
-        .min(3, "The title must be at least 3 characters long"),
+        .required('El título es obligatorio')
+        .min(3, 'El título debe tener al menos 3 caracteres')
+        .max(50, 'El título no puede tener más de 50 caracteres'),
     
     description: yup.string()
-        .required("The description is required")
-        .min(10, "The description must be at least 10 characters long"),
+        .required('La descripción es obligatoria')
+        .min(10, 'La descripción debe tener al menos 10 caracteres')
+        .max(300, 'La descripción no puede superar los 300 caracteres'),
     
     location: yup.array()
         .of(yup.string()
-            .min(2, "Each field must be at least 3 characters long"))
-            .max(25, "Each field cannot exceed 25 characters")
-        .required("The location is required"),
+            .min(2, 'Cada campo debe tener al menos 2 caracteres'))
+            .max(25, 'Cada campo no puede superar los 25 caracteres')
+        .required('La ubicación es obligatoria'),
     
     price: yup.number()
-        .required("The price is required")
-        .positive("The price must be a positive number"),
-    
+        .required('El precio es obligatorio')
+        .positive('El precio debe ser un número positivo')
+        .min(1, 'El precio mínimo es 1'),
+
     availabilityDates: yup.array()
-        .of(yup.date().required("Each date must be valid"))
-        .required("Availability dates are required")
-        .min(1, "At least one availability date is required"),
+        .of(yup.date().required('Cada fecha debe ser válida'))
+        .required('Las fechas de disponibilidad son obligatorias')
+        .min(1, 'Debe haber al menos una fecha disponible'),
     
-    tags: yup.array().of(yup.string().max(15, 'Tags cannot surpass 15 characters')).optional(),
+    tags: yup.array()
+        .of(yup.string().max(15, 'Cada etiqueta no puede superar los 15 caracteres'))
+        .optional(),
     
     capacity: yup.number()
-        .required("The capacity is required")
-        .positive("The capacity must be a positive number")
-        .integer("The capacity must be an integer")
-        .min(1, "The capacity must be at least 1"),
+        .required('La capacidad es obligatoria')
+        .positive('La capacidad debe ser un número positivo')
+        .integer('La capacidad debe ser un número entero')
+        .min(1, 'La capacidad mínima es 1'),
 
-    hostId: yup.string().required("El ID del usuario es obligatorio."),
+    hostId: yup.string()
+        .required('El ID del anfitrión es obligatorio'),
 });
 
-// Update schema for upload experience
 export const updateExperienceSchema = uploadExperienceSchema.concat(
     yup.object().shape({
-        id: yup.string().required(),
+        id: yup.string().required('El ID es obligatorio'),
         title: yup.string().optional(),
         description: yup.string().optional(),
         location: yup.array().of(yup.string()).optional(),
-        hostId: yup.string().required(),
+        hostId: yup.string().required('El ID del anfitrión es obligatorio'),
         price: yup.number().optional(),
-        availabilityDates: yup.array().of(yup.date().required("Each date must be valid")).optional(),
+        availabilityDates: yup.array().of(yup.date().required('Cada fecha debe ser válida')).optional(),
         capacity: yup.number().optional(),
         tags: yup.array().of(yup.string()).optional(),
     })
@@ -131,73 +137,68 @@ export const updateExperienceSchema = uploadExperienceSchema.concat(
 
 export const uploadReviewSchema = yup.object().shape({
     experienceId: yup.string()
-        .required("Experience ID is required"),
+        .required('El ID de la experiencia es obligatorio'),
     
     rating: yup.number()
-        .required("Rating is required")
-        .min(1, "Rating must be at least 1")
-        .max(5, "Rating cannot exceed 5"),
+        .required('La calificación es obligatoria')
+        .min(1, 'La calificación debe ser al menos 1')
+        .max(5, 'La calificación no puede ser mayor a 5'),
     
     comment: yup.string()
-        .required("Comment is required")
-        .min(10, "Comment must be at least 10 characters long")
-        .max(500, "Comment cannot exceed 500 characters"),
+        .required('El comentario es obligatorio')
+        .min(10, 'El comentario debe tener al menos 10 caracteres')
+        .max(500, 'El comentario no puede superar los 500 caracteres'),
 
-    userId: yup.string().required("El ID del usuario es obligatorio."),
-        
+    userId: yup.string()
+        .required('El ID del usuario es obligatorio'),
 });
 
-// Update schema for review
 export const updateReviewSchema = uploadReviewSchema.concat(
     yup.object().shape({
-        reviewId: yup.string().required("Review Id is required."),
+        reviewId: yup.string()
+            .required('El ID de la reseña es obligatorio'),
         rating: yup.number().optional(),
         comment: yup.string().optional(),
-        userId: yup.string().required()
+        userId: yup.string().required('El ID del usuario es obligatorio'),
     })
 );
 
-// Schema for make a booking
 export const bookingSchema = yup.object().shape({
-    experienceId: yup.string().required(),
-    userId: yup.string().required(),
-    bookingDate: yup.date().required(),
-    participants: yup.number().required().min(1),
-  });
+    experienceId: yup.string().required('El ID de la experiencia es obligatorio'),
+    userId: yup.string().required('El ID del usuario es obligatorio'),
+    bookingDate: yup.date().required('La fecha de reserva es obligatoria'),
+    participants: yup.number().required('El número de participantes es obligatorio').min(1, 'Debe haber al menos 1 participante'),
+});
 
-//Schema for update a booking
 export const updateBookingSchema = yup.object().shape({
-    experienceId: yup.string(),
-    userId: yup.string().required(),
-    status: yup.string().oneOf(['pending', 'confirmed', 'canceled']),
-    totalPrice: yup.number(),
-    participants: yup.number(),
-    paymentStatus: yup.string().oneOf(['paid', 'pending']),
-  });
+    experienceId: yup.string().optional(),
+    userId: yup.string().required('El ID del usuario es obligatorio'),
+    status: yup.string().oneOf(['pending', 'confirmed', 'cancelled'], 'Estado inválido').optional(),
+});
 
 export const userVerification = yup.object().shape({
     email: yup.string()
-        .email('Invalid email address')
-        .required('Email is required'),
+        .email('El correo es inválido')
+        .required('El correo es obligatorio'),
     
     verificationCode: yup.string()
-        .matches(/^\d{6}$/, 'Verification code must be exactly 6 digits')
-        .required('Verification code is required'),
+        .matches(/^\d{6}$/, 'El código de verificación debe tener exactamente 6 dígitos')
+        .required('El código de verificación es obligatorio'),
 });
 
 export const passwordChangeSchema = yup.object().shape({
     newPassword: yup.string()
-        .required('Password is required')
-        .min(8, 'Password must be at least 8 characters long')
-        .max(12, 'Password cannot exceed 12 characters')
+        .required('La nueva contraseña es obligatoria')
+        .min(8, 'La contraseña debe tener al menos 8 caracteres')
+        .max(12, 'La contraseña no puede superar los 12 caracteres')
         .matches(
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@#!]).{8,12}$/,
-            'Password must contain at least one uppercase letter, one lowercase letter, one number, and one symbol (@#!)'
+            'La contraseña debe contener al menos una mayúscula, una minúscula, un número y un símbolo (@#!)'
         ),
     email: yup.string()
-        .email('Invalid email address')
-        .required('Email is required'),
+        .email('El correo es inválido')
+        .required('El correo es obligatorio'),
     code: yup.string()
-        .matches(/^\d{6}$/, 'Verification code must be exactly 6 digits')
-        .required('Verification code is required'),
+        .matches(/^\d{6}$/, 'El código de verificación debe tener exactamente 6 dígitos')
+        .required('El código de verificación es obligatorio'),
 });

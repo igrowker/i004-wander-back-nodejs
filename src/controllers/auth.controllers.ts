@@ -1,6 +1,6 @@
+import * as yup from "yup";
 import { Response, Request} from "express";
 import axios from "axios";
-import * as yup from "yup";
 import { userRegistrationSchema, updateProfileSchema, userVerification } from "../types/yup-validations";
 import { ValidationError } from 'yup';
 
@@ -13,13 +13,13 @@ const login = async (req: Request, res: Response) => {
     if (!email || !password) {
         return res
             .status(404)
-            .json({ message: "Email and password are required." });
+            .json({ message: "El email y la contraseña son necesarios" });
     }
 
     //Add email format validation (regex)
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(email)) {
-        return res.status(400).json({ message: "Invalid email format." });
+        return res.status(400).json({ message: "Ingrese un correo electrónico válido" });
     }
 
     try {
@@ -34,7 +34,7 @@ const login = async (req: Request, res: Response) => {
 
         //Send the token and and user details
         return res.json({
-            message: "Log in successful",
+            message: "Inicio de sesión exitoso",
             token,
             user, 
             userId: idUser
@@ -42,17 +42,26 @@ const login = async (req: Request, res: Response) => {
 
     } catch (error: any) {
         console.error("Error logging in.", error);
+        if (error instanceof ValidationError) {
+            return res.status(400).json({
+                message: "Error de validación",
+                errors: error.inner.map((err) => ({
+                    path: err.path,
+                    message: err.message,
+                })),
+            });
+        }
 
         if (error.response) {
             switch (error.response.status) {
                 case 400:
                     return res.status(400).json({ message: "Missing email or password" })
                 case 404:
-                    return res.status(404).json({ message: "User not found" });
+                    return res.status(404).json({ message: "Ruta no encontrada" });
                 case 401:
-                    return res.status(401).json({ message: "Invalid credentials" });
+                    return res.status(401).json({ message: "No autorizado o credenciales incorrectas" });
                 default:
-                    return res.status(500).json({ message: "Internal server error." });
+                    return res.status(500).json({ message: "Error en la comunicación con el servidor" });
             }
         }
     }
@@ -99,25 +108,25 @@ const getProfile = async (req: Request, res: Response) => {
         const profile = response.data;
 
         return res.status(200).json({
-            message: "Retrieved user data successfully.",
+            message: "Datos recuperados exitosamente.",
             profile
         });
 
     } catch (error: any) {
-        console.error("Error retrieving profile:", error);
+        console.error("Error recuperando datos:", error);
 
         if (error.response) {
             switch (error.response.status) {
                 case 401:
-                    return res.status(401).json({ message: "Unauthorized access" });
+                    return res.status(401).json({ message: "Acceso no autorizado" });
                 case 404:
-                    return res.status(404).json({ message: "Profile not found" });
+                    return res.status(404).json({ message: "Perfil no encontrado" });
                 default:
-                    return res.status(500).json({ message: "Internal server error" });
+                    return res.status(500).json({ message: "Error de servidor interno" });
             }
         }
 
-        return res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Error de servidor interno" });
     }
 };
 
@@ -130,7 +139,7 @@ const updateProfile = async (req: Request, res: Response) => {
     });
 
     if (Object.keys(validData).length === 0) {
-        return res.status(400).json({ message: "No data provided to update" });
+        return res.status(400).json({ message: "No se proporcionaron datos para actualizar." });
     }
 
     try {
@@ -149,27 +158,36 @@ const updateProfile = async (req: Request, res: Response) => {
         const updatedProfile = response.data;
 
         return res.status(200).json({
-            message: "Profile updated successfully",
+            message: "Perfil actualizado exitosamente",
             updatedProfile,
         });
 
     } catch (error: any) {
-        console.error("Error updating profile:", error);
+        console.error("Error actualizando perfil:", error);
+        if (error instanceof ValidationError) {
+            return res.status(400).json({
+                message: "Error de validación",
+                errors: error.inner.map((err) => ({
+                    path: err.path,
+                    message: err.message,
+                })),
+            });
+        }
 
         if (error.response) {
             switch (error.response.status) {
                 case 400:
-                    return res.status(400).json({ message: "Invalid data provided" });
+                    return res.status(400).json({ message: "Datos proporcionados inválidos" });
                 case 401:
-                    return res.status(401).json({ message: "Unauthorized access" });
+                    return res.status(401).json({ message: "Acceso no autorizado" });
                 case 404:
-                    return res.status(404).json({ message: "User not found" });
+                    return res.status(404).json({ message: "Usuario no encontrado" });
                 default:
-                    return res.status(500).json({ message: "Internal server error" });
+                    return res.status(500).json({ message: "Error de servidor interno" });
             }
         }
 
-        return res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Error de servidor interno" });
     }
 };
 
@@ -189,36 +207,41 @@ const register = async (req: Request, res: Response) => {
         const newUser = backendResponse.data
         // Devolver la respuesta del backend al frontend
         return res.status(200).json({
-            message: "User registered successfully",
+            message: "Usuario registrado correctamente",
             newUser
         });
         
     } catch (error: any) {
         
-        if (error instanceof yup.ValidationError) {
-            // Errores de validación
-            return res.status(400).json({ errors: error.errors });
+        if (error instanceof ValidationError) {
+            return res.status(400).json({
+                message: "Error de validación",
+                errors: error.inner.map((err) => ({
+                    path: err.path,
+                    message: err.message,
+                })),
+            });
         }
         
         if (axios.isAxiosError(error)) {
             // Manejar un error 409 Conflict
             if (error.response?.status === 409) {
                 return res.status(409).json({
-                    message: "User already exists",
+                    message: "Esa dirección de email ya ha sido utilizada",
                     details: error.response.data,
                 });
             }
 
             // Otros errores en la comunicación con el backend principal
             return res.status(error.response?.status || 500).json({
-                message: "Error communicating with the main backend",
+                message: "Error en la comunicación con el servidor",
                 details: error.response?.data || error.message,
             });
         }
         
         // Otros errores
         return res.status(500).json({
-            message: "Internal server error",
+            message: "Error en la comunicación con el servidor",
             details: (error as Error).message, 
         });
     }
@@ -238,7 +261,7 @@ const verificationCode = async (req: Request, res: Response) => {
 
         // Return the response from the backend
         return res.status(200).json({
-            message: "Verification successful",
+            message: "Verificación completada",
             data: response.data,
         });
         
@@ -246,7 +269,7 @@ const verificationCode = async (req: Request, res: Response) => {
         console.error("Error verifying user:", error);
         if (error instanceof ValidationError) {
             return res.status(400).json({
-                message: "Validation error",
+                message: "Código incorrecto",
                 errors: error.inner.map((err) => ({
                     path: err.path,
                     message: err.message,
@@ -256,12 +279,12 @@ const verificationCode = async (req: Request, res: Response) => {
 
         if (axios.isAxiosError(error) && error.response) {
             return res.status(error.response.status).json({
-                message: "Error communicating with the verification service",
+                message: "Error en la comunicación con el servidor",
                 details: error.response.data,
             });
         }
 
-        return res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Error en la comunicación con el servidor" });
     }
 };
 
@@ -275,17 +298,17 @@ const resendVerificationCode = async (req: Request, res: Response) => {
         });
 
     } catch (error: any) {
-        console.error("Error verifying user:", error);
+        console.error("Error verificando usuario:", error);
 
         if (axios.isAxiosError(error) && error.response) {
             return res.status(error.response.status).json({
 
-                message: "Error communicating with the service",
+                message: "Error intentando comunicar con el servicio",
                 details: error.response.data,
             });
         }
 
-        return res.status(500).json({ message: "Internal server error" });
+        return res.status(500).json({ message: "Error de servidor interno" });
     }
 };
 
