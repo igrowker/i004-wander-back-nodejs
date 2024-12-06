@@ -173,7 +173,7 @@ export const bookingSchema = yup.object().shape({
 export const updateBookingSchema = yup.object().shape({
     experienceId: yup.string().optional(),
     userId: yup.string().required('El ID del usuario es obligatorio'),
-    status: yup.string().oneOf(['pending', 'confirmed', 'canceled'], 'Estado inválido').optional(),
+    status: yup.string().oneOf(['pending', 'confirmed', 'cancelled'], 'Estado inválido').optional(),
 });
 
 export const userVerification = yup.object().shape({
