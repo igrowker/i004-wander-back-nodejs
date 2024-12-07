@@ -27,7 +27,7 @@ export const userRegistrationSchema = yup.object().shape({
         .required('El rol es obligatorio'),
 
     location: yup.string()
-        .oneOf(['España, Italia, Francia'])
+        .oneOf(['España', 'Italia', 'Francia'])
         .required(),
 
     phone: yup.string()
@@ -59,18 +59,16 @@ export const updateProfileSchema = yup.object().shape({
         ),
     
     role: yup.string()
-        .oneOf(['tourist', 'provider'], 'El rol es inválido')
+        .oneOf(['TOURIST', 'PROVIDER'], 'El rol es inválido')
         .optional(),
     
     preferences: yup.array()
         .of(yup.string().max(30, 'Cada preferencia no puede superar los 30 caracteres'))
         .optional(),
     
-    location: yup.array()
-        .of(yup.string()
-            .min(2, 'Cada campo debe tener al menos 2 caracteres'))
-            .max(25, 'Cada campo no puede superar los 25 caracteres')
-        .required('La ubicación es obligatoria'),
+    location: yup.string()
+        .oneOf(['España', 'Italia', 'Francia'])
+        .optional(),
 
     phone: yup.string()
         .optional()
