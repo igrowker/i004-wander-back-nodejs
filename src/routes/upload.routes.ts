@@ -1,9 +1,9 @@
 import express from "express"
 const router = express.Router()
-import { getPresignedUrl, uploadImage } from "../controllers/imageUpload.controllers"
-import { isAuthenticated } from "../middlewares/verifyToken.middleware"
+import { getPresignedUrl, uploadImage, deleteImage } from "../controllers/imageUpload.controllers"
 
-router.post("/presigned-url", isAuthenticated, getPresignedUrl)
-router.post("/image", isAuthenticated, uploadImage)
+router.post("/presigned-url", getPresignedUrl)
+router.post("/image", uploadImage)
+router.delete("/image", deleteImage)
 
 export default router

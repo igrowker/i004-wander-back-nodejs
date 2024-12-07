@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3"
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3"
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import { fromEnv } from "@aws-sdk/credential-provider-env"
 
@@ -12,4 +12,9 @@ const generateUploadUrl = async (bucket: string, key: string) => {
     return getSignedUrl(s3, command, { expiresIn: 3600 })
 }
 
-export { s3, generateUploadUrl }
+const deleteImageFromBucket = async (bucket: string, key: string) => {
+    const command = new DeleteObjectCommand({ Bucket: bucket, Key: key })
+    await s3.send(command);
+}
+
+export { s3, generateUploadUrl, deleteImageFromBucket }
