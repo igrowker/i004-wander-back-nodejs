@@ -1,6 +1,6 @@
 import { Response, NextFunction, Request } from "express"
-import { generateUploadUrl } from '../middlewares/aws.middleware'
 import { sendImageUrlToJavaBackend } from '../services/javaBackendService'
+import { generateUploadUrl, deleteImageFromBucket } from '../middlewares/aws.middleware'
 
 const getPresignedUrl = async (req: Request, res: Response, next: NextFunction) => {
     const { fileName } = req.body
@@ -41,5 +41,19 @@ const uploadImage = async (req: Request, res: Response, next: NextFunction) => {
     }
 }
 
-export { getPresignedUrl, uploadImage }
+const deleteImage = async (req: Request, res: Response, next: NextFunction) => {
+    const { key } = req.body
 
+    if (!key) {
+        return res.status(400).json({ errorMessage: 'Key is required' })
+    }
+
+    try {
+        await deleteImageFromBucket(process.env.AWS_S3_BUCKET_NAME!, key)
+        res.status(200).json({ message: 'Image deleted successfully' })
+    } catch (error) {
+        res.status(500).json({ errorMessage: 'Error deleting image', error })
+    }
+}
+
+export { getPresignedUrl, uploadImage, deleteImage }
