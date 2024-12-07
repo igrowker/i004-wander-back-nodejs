@@ -22,7 +22,7 @@ const recoverPassword = async (req: Request, res: Response) => {
 
     try {
         //Send request to the backend to create a recovery code sent to email
-        const response = await axios.post(`${JAVA_BACKEND_URL}/api/autenticacion/forgot-password,`, {
+        const response = await axios.post(`${JAVA_BACKEND_URL}/api/autenticacion/forgot-password`, {
             email,
         });
 
