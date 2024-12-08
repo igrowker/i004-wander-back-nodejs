@@ -23,7 +23,7 @@ export const userRegistrationSchema = yup.object().shape({
         ),
 
     role: yup.string()
-        .oneOf(['tourist', 'provider'], 'El rol es inválido')
+        .oneOf(['TOURIST', 'PROVIDER'], 'El rol es inválido')
         .required('El rol es obligatorio'),
 
     location: yup.string()
