@@ -57,9 +57,9 @@ const login = async (req: Request, res: Response) => {
                 case 400:
                     return res.status(400).json({ message: "Missing email or password" })
                 case 404:
-                    return res.status(404).json({ message: "Ruta no encontrada" });
+                    return res.status(404).json({ message: "Credenciales inválidas" });
                 case 401:
-                    return res.status(401).json({ message: "No autorizado o credenciales incorrectas" });
+                    return res.status(401).json({ message: "Credenciales inválidas" });
                 default:
                     return res.status(500).json({ message: "Error en la comunicación con el servidor" });
             }
